@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4277e82aff590fb428c18ffb78740075, type: 3}
+  m_Name: SkinData
+  m_EditorClassIdentifier: 
+  skins:
+  - mainTexture: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
+    onFireTexture: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
+    unlocked: 1
+    challenge: 
+    process: 0
+  - mainTexture: {fileID: 21300000, guid: 0fafbfab50cf22341a462feb5b58b713, type: 3}
+    onFireTexture: {fileID: 21300000, guid: 459fb33d62aa9e047b1ecadf04833b3e, type: 3}
+    unlocked: 1
+    challenge: 
+    process: 0
+  - mainTexture: {fileID: 21300000, guid: c2d82a8ed0184e745ab65b97b4b46a0a, type: 3}
+    onFireTexture: {fileID: 0}
+    unlocked: 0
+    challenge: There're nothing you can do to unlock this skin
+    process: 0
+  - mainTexture: {fileID: 21300000, guid: e3b337e3499e8c44d97189c26a907d1f, type: 3}
+    onFireTexture: {fileID: 21300000, guid: 67256265cb8cebf4b9de5f688eac0637, type: 3}
+    unlocked: 1
+    challenge: 
+    process: 0
+  - mainTexture: {fileID: 21300000, guid: 811664b98700ab34299e5e84ea7dc434, type: 3}
+    onFireTexture: {fileID: 0}
+    unlocked: 0
+    challenge: Just for testing process slide
+    process: 0.34

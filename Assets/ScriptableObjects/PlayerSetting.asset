@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48f3a4e09671ed440b21e448656fcbc3, type: 3}
+  m_Name: PlayerSetting
+  m_EditorClassIdentifier: 
+  mainSkin: {fileID: 21300000, guid: 522e8bbe6db02b14fbfdc403224cd288, type: 3}
+  onFireSkin: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
+  effects:
+  - {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080, type: 3}
+  - {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100, type: 3}
+  - {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24, type: 3}
+  isSoundOn: 1
+  isVibrationOn: 1
