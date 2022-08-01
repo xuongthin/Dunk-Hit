@@ -162,7 +162,7 @@ Transform:
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3639588456644683644}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2159354308839022257
 SpriteRenderer:
@@ -171,7 +171,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113912465898269601}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -270,8 +270,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3639588456644683644}
-  - component: {fileID: 8082751640677365399}
-  - component: {fileID: 2140289380435236386}
   m_Layer: 0
   m_Name: Effect
   m_TagString: Untagged
@@ -290,54 +288,12 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1663955298675583128}
   - {fileID: 3556462946857086797}
   - {fileID: 6212141307919098108}
   m_Father: {fileID: 5921253382711996295}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &8082751640677365399
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3065309344638044830}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5f58710e59d781f4ba3fdd47c9c8fe29, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2140289380435236386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3065309344638044830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a44bc7b723405374690d5163b8b12ada, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 2159354308839022257}
-  sheet:
-  - {fileID: 21300000, guid: f48f76efa8061324abc657dc17fa588f, type: 3}
-  - {fileID: 21300000, guid: e0aa3fe51396c4249b33f0251fdb41a1, type: 3}
-  - {fileID: 21300000, guid: 69491a6f1b4e7b343932b6d33ae3cd41, type: 3}
-  - {fileID: 21300000, guid: 350ceab78328d064e956879b9bdb7a2e, type: 3}
-  - {fileID: 21300000, guid: 0c6041a17fc57614d8fb81223f07575a, type: 3}
-  - {fileID: 21300000, guid: f5c73213289d18642b8299ec4707cb4f, type: 3}
-  - {fileID: 21300000, guid: 54fd8288bea332741b0ed1cd7ea613f1, type: 3}
-  - {fileID: 21300000, guid: 707668b1dfdb73346b2bc469d4516fd9, type: 3}
-  perfectEffect: {fileID: 0}
-  burnEffect: {fileID: 4071450027826056310}
 --- !u!1 &4034399854106994246
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,7 +513,7 @@ GameObject:
   - component: {fileID: 4071450027826056310}
   - component: {fileID: 8980375955543201671}
   m_Layer: 0
-  m_Name: Burn Effect
+  m_Name: Burn Particle Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -575,7 +531,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3639588456644683644}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &4071450027826056310
 ParticleSystem:
@@ -593,7 +549,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -660,7 +616,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 1.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -713,7 +669,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1151,7 +1107,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -5312,8 +5268,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2010c333ff233074eac935f21d0cfb8c, type: 2}
-  - {fileID: 2100000, guid: 2010c333ff233074eac935f21d0cfb8c, type: 2}
+  - {fileID: 2100000, guid: dfc7ba88bba6f6c4ebda331c6fca441c, type: 2}
+  - {fileID: 2100000, guid: dfc7ba88bba6f6c4ebda331c6fca441c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5357,6 +5313,87 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!1 &6724439546260294799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1663955298675583128}
+  - component: {fileID: 9124776444446558203}
+  m_Layer: 0
+  m_Name: Burn Sprite Renderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1663955298675583128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6724439546260294799}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.619, y: 1.195, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3639588456644683644}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &9124776444446558203
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6724439546260294799}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: dd42799face7ee04bac12ab34fda0c9f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 3.24, y: 3.83}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &7857676518412070139
 GameObject:
   m_ObjectHideFlags: 0
@@ -5412,7 +5449,11 @@ MonoBehaviour:
   - {fileID: 4006485343250949258}
   - {fileID: 3910779785250672158}
   netAnimator: {fileID: 7191138048379655922}
-  effectManager: {fileID: 2140289380435236386}
+  effectManager: {fileID: 0}
+  netSprire: {fileID: 914575276784730277}
+  burnSprite: {fileID: 9124776444446558203}
+  burnEffect: {fileID: 4071450027826056310}
+  bigScoreSprite: {fileID: 2159354308839022257}
 --- !u!61 &2467932533093454555
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Combo
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -16,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LevelsSetting levelsSetting;
     [SerializeField] private PlayerSetting playerSetting;
     [SerializeField] private float playZone;
-    [SerializeField] private Rect hoopSpawnZone;
+    // [SerializeField] private Rect hoopSpawnZone;
     [SerializeField] private Hoop[] hoops;
     [SerializeField] private float timeDecreaseEachScore;
     [SerializeField] private float minTime;
@@ -50,6 +48,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
+
         OnGameStart += delegate ()
         {
             usedSecondChance = false;
@@ -86,13 +86,26 @@ public class GameManager : MonoBehaviour
 
         OnResume += delegate () { isPlaying = true; };
 
-        OnTimeOut += delegate () { isPlaying = false; };
+        OnTimeOut += delegate ()
+        {
+            isPlaying = false;
+        };
 
         OnRevive += delegate ()
         {
+            usedSecondChance = true;
             maxTime = (maxTime + currentLevel.initTime) / 2;
             timer = maxTime;
             isPlaying = true;
+        };
+
+        OnEndGame += delegate ()
+        {
+            int hightScore = PlayerPrefs.GetInt("High Score", 0);
+            if (score > hightScore)
+            {
+                PlayerPrefs.SetInt("High Score", score);
+            }
         };
 
         Ball.Instance.SetSkin(playerSetting.mainSkin, playerSetting.onFireSkin, playerSetting.effects[0], playerSetting.effects[1], playerSetting.effects[2]);
@@ -121,32 +134,22 @@ public class GameManager : MonoBehaviour
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                if (!usedSecondChance)
-                {
-                    OnTimeOut();
-                    usedSecondChance = true;
-                }
-                else
-                {
-                    OnEndGame();
-                }
+                Ball.Instance.SetTimeOut();
             }
         }
     }
 
-    public void WakeHoopUp()
+    private void WakeHoopUp()
     {
         int id = hoopInRight ? 1 : 0;
         hoops[id].WakeUp();
     }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
+    public void OfficalTimeOut()
     {
-        Gizmos.DrawWireCube(Vector3.right * playZone, Vector3.up * 10);
-        Gizmos.DrawWireCube(-Vector3.right * playZone, Vector3.up * 10);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position + (Vector3)hoopSpawnZone.center, hoopSpawnZone.size);
+        if (usedSecondChance)
+            OnEndGame();
+        else
+            OnTimeOut();
     }
-#endif
 }

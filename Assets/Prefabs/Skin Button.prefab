@@ -142,4 +142,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 579f3de5c7071ab49a3da55cfa8cb2e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onLockColor: {r: 0, g: 0, b: 0, a: 0}
+  onLockColor: {r: 1, g: 1, b: 1, a: 0.5019608}

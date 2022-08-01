@@ -13,28 +13,63 @@ MonoBehaviour:
   m_Name: SkinData
   m_EditorClassIdentifier: 
   skins:
-  - mainTexture: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
+  - mainTexture: {fileID: 21300000, guid: 522e8bbe6db02b14fbfdc403224cd288, type: 3}
     onFireTexture: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
+    burnEffect1: {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080,
+      type: 3}
+    burnEffect2: {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100,
+      type: 3}
+    burnEffect3: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
+      type: 3}
     unlocked: 1
     challenge: 
     process: 0
+    target: 0
   - mainTexture: {fileID: 21300000, guid: 0fafbfab50cf22341a462feb5b58b713, type: 3}
     onFireTexture: {fileID: 21300000, guid: 459fb33d62aa9e047b1ecadf04833b3e, type: 3}
+    burnEffect1: {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080,
+      type: 3}
+    burnEffect2: {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100,
+      type: 3}
+    burnEffect3: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
+      type: 3}
     unlocked: 1
     challenge: 
     process: 0
+    target: 0
   - mainTexture: {fileID: 21300000, guid: c2d82a8ed0184e745ab65b97b4b46a0a, type: 3}
     onFireTexture: {fileID: 0}
+    burnEffect1: {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080,
+      type: 3}
+    burnEffect2: {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100,
+      type: 3}
+    burnEffect3: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
+      type: 3}
     unlocked: 0
     challenge: There're nothing you can do to unlock this skin
     process: 0
+    target: 0
   - mainTexture: {fileID: 21300000, guid: e3b337e3499e8c44d97189c26a907d1f, type: 3}
     onFireTexture: {fileID: 21300000, guid: 67256265cb8cebf4b9de5f688eac0637, type: 3}
+    burnEffect1: {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080,
+      type: 3}
+    burnEffect2: {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100,
+      type: 3}
+    burnEffect3: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
+      type: 3}
     unlocked: 1
     challenge: 
     process: 0
+    target: 0
   - mainTexture: {fileID: 21300000, guid: 811664b98700ab34299e5e84ea7dc434, type: 3}
     onFireTexture: {fileID: 0}
+    burnEffect1: {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080,
+      type: 3}
+    burnEffect2: {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100,
+      type: 3}
+    burnEffect3: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
+      type: 3}
     unlocked: 0
     challenge: Just for testing process slide
     process: 0.34
+    target: 0

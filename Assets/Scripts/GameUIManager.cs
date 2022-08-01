@@ -15,6 +15,7 @@ public class GameUIManager : MonoBehaviour
 
     [Header("In Game")]
     [SerializeField] private Image timerBar;
+    private Material timerBarMaterial;
     [SerializeField] private Text challenge;
     [SerializeField] private CanvasGroup challengeCanvas;
     [SerializeField] private Text scoreText;
@@ -38,6 +39,8 @@ public class GameUIManager : MonoBehaviour
 
     private void Start()
     {
+        timerBarMaterial = timerBar.material;
+
         GameManager.Instance.OnGameStart += OnGameStart;
 
         GameManager.Instance.OnScore += UpdateScore;
@@ -83,6 +86,7 @@ public class GameUIManager : MonoBehaviour
 
     public void BackHome()
     {
+        AudioManager.Instance.PlayMenuAudio();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -118,7 +122,7 @@ public class GameUIManager : MonoBehaviour
         gameOverGroup.SetActive(false);
         endgameGroup.SetActive(true);
         endGameScore.text = GameManager.Instance.Score.ToString();
-        // TODO: update highest score text
+        bestScore.text = PlayerPrefs.GetInt("High Score", 0).ToString();
     }
 
     public void Replay()
@@ -131,7 +135,8 @@ public class GameUIManager : MonoBehaviour
         if (isPlaying)
         {
             float timerBarFill = GameManager.Instance.TimeRemainInPercent;
-            timerBar.fillAmount = timerBarFill;
+            timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
+            timerBarMaterial.SetFloat("_Fill", timerBar.fillAmount);
         }
         else if (isGameOver)
         {

@@ -9,6 +9,11 @@ public class Hoop : MonoBehaviour
     private BoxCollider2D trigger;
     [SerializeField] private Animator netAnimator;
     [SerializeField] private HoopEffect effectManager;
+    [SerializeField] private SpriteRenderer netSprire;
+    [SerializeField] private SpriteRenderer burnSprite;
+    [SerializeField] private ParticleSystem burnEffect;
+    [SerializeField] private SpriteRenderer bigScoreSprite;
+
     private Vector2 initPosition;
 
     private bool isScored = true;  // for safe, in case the ball hit trigger multiple times (cuz bouncing).
@@ -44,24 +49,21 @@ public class Hoop : MonoBehaviour
     {
         if (!isScored && other.transform.position.y > transform.position.y + trigger.offset.y)
         {
-            Ball.Instance.CheckCombo();
+            if (GameManager.Instance.IsOnBurn)
+            {
+                TriggerBurnEffect();
+            }
+            else
+            {
+                TriggerNormalScoreEffect();
+            }
+            if (Ball.Instance.CheckCombo())
+            {
+                TriggerBigScoreEffect();
+            }
             isScored = true;
             StartCoroutine(GetOut());
-            SetAnimation();
         }
-    }
-
-    private void SetAnimation()
-    {
-        if (GameManager.Instance.IsOnBurn)
-        {
-            netAnimator.SetTrigger("On Burn");
-        }
-        else
-        {
-            netAnimator.SetTrigger("On Score");
-        }
-        effectManager.Trigger();
     }
 
     private IEnumerator GetOut()
@@ -77,6 +79,8 @@ public class Hoop : MonoBehaviour
             transform.position = Vector2.Lerp(startPosition, initPosition, lerp / setting.getOutTime);
             yield return null;
         }
+
+        ResetDisplay();
     }
 
     private void SetCollidersActive(bool value)
@@ -85,5 +89,53 @@ public class Hoop : MonoBehaviour
         {
             collider.enabled = value;
         }
+    }
+
+    private void TriggerNormalScoreEffect()
+    {
+        netAnimator.SetTrigger("On Score");
+    }
+
+    private void TriggerBurnEffect()
+    {
+        netSprire.enabled = false;
+        burnSprite.enabled = true;
+        burnEffect.Play();
+    }
+
+    private void TriggerBigScoreEffect()
+    {
+        StartCoroutine(ScoreEffect());
+    }
+
+    private IEnumerator ScoreEffect()
+    {
+        int combo = GameManager.Instance.ComboCount;
+        if (combo == 1)
+            bigScoreSprite.sprite = setting.combo2;
+        else if (combo == 2)
+            bigScoreSprite.sprite = setting.combo4;
+        else
+            bigScoreSprite.sprite = setting.combo8[Random.Range(0, setting.combo8.Length)];
+
+        bigScoreSprite.enabled = true;
+        yield return Yielders.Get(setting.displayTime);
+        float lerp = setting.fadeTime;
+        Color temp = Color.white;
+        while (lerp >= 0)
+        {
+            lerp -= Time.deltaTime;
+            temp.a = lerp / setting.fadeTime;
+            bigScoreSprite.color = temp;
+        }
+
+        bigScoreSprite.enabled = false;
+        bigScoreSprite.color = Color.white;
+    }
+
+    private void ResetDisplay()
+    {
+        netSprire.enabled = true;
+        burnSprite.enabled = false;
     }
 }

@@ -15,8 +15,8 @@ public class Ball : MonoBehaviour
     [SerializeField] private Vector2 cloneOffset;
     [SerializeField] private Vector2 jumpForce;
     [SerializeField] private float minComboSpeed;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
     private Sprite mainSkin;
     private Sprite fireSkin;
     private ParticleSystem[] effects;
@@ -24,11 +24,11 @@ public class Ball : MonoBehaviour
     private Vector2 _pausedVelocity;
     private float _pausedAngularVelocity;
 
+    private bool lastBreath;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
         GameManager.Instance.OnPause += Froze;
         GameManager.Instance.OnResume += Defrost;
     }
@@ -36,19 +36,22 @@ public class Ball : MonoBehaviour
     public void SetSkin(Sprite skin)
     {
         GetComponent<SpriteRenderer>().sprite = skin;
-
-        ballCloneLeft.GetComponent<SpriteRenderer>().sprite = skin;
-        ballCloneRight.GetComponent<SpriteRenderer>().sprite = skin;
     }
 
     public void SetSkin(Sprite skin1, Sprite skin2, GameObject effectPrefab1, GameObject effectPrefab2, GameObject effectPrefab3)
     {
+        spriteRenderer.sprite = skin1;
         mainSkin = skin1;
         fireSkin = skin2;
         effects = new ParticleSystem[3];
         effects[0] = Instantiate(effectPrefab1, transform).GetComponent<ParticleSystem>();
         effects[1] = Instantiate(effectPrefab2, transform).GetComponent<ParticleSystem>();
         effects[2] = Instantiate(effectPrefab3, transform).GetComponent<ParticleSystem>();
+    }
+
+    public void SetTimeOut()
+    {
+        lastBreath = true;
     }
 
     private void Update()
@@ -66,12 +69,24 @@ public class Ball : MonoBehaviour
         ballCloneLeft.position = transform.position - (Vector3)cloneOffset;
         ballCloneRight.position = transform.position + (Vector3)cloneOffset;
 
-        ballCloneLeft.rotation = transform.rotation;
-        ballCloneRight.rotation = transform.rotation;
+        if (lastBreath && rb.position.y < -5)
+        {
+            lastBreath = false;
+            GameManager.Instance.OfficalTimeOut();
+        }
     }
 
-    public void CheckCombo()
+    public bool CheckCombo()
     {
+        AudioManager.Instance.PlayScoreSound();
+        lastBreath = false;
+
+        // modify velocity so that it's easier to score next time
+        if (Mathf.Sign(rb.velocity.x) * Mathf.Sign(rb.position.x) > 0)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+
         if (rb.velocity.sqrMagnitude > minComboSpeed * minComboSpeed)
         {
             GameManager.Instance.OnScore(true);
@@ -82,21 +97,23 @@ public class Ball : MonoBehaviour
                 if (combo > 1)
                     effects[combo - 2].Stop(false, ParticleSystemStopBehavior.StopEmitting);
             }
+            if (GameManager.Instance.IsOnBurn)
+            {
+                spriteRenderer.sprite = fireSkin;
+                AudioManager.Instance.Vibrate();
+            }
+            return true;
         }
         else
         {
             GameManager.Instance.OnScore(false);
+            spriteRenderer.sprite = mainSkin;
             foreach (var effect in effects)
             {
                 if (effect.isPlaying)
                     effect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
-        }
-
-        // modify velocity so that it's easier to score next time
-        if (Mathf.Sign(rb.velocity.x) * Mathf.Sign(rb.position.x) > 0)
-        {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            return false;
         }
     }
 
@@ -134,7 +151,11 @@ public class Ball : MonoBehaviour
 
     public void Jump()
     {
-        float direction = GameManager.Instance.HoopInRight ? 1 : -1;
-        rb.velocity = new Vector2(jumpForce.x * direction, jumpForce.y);
+        if (!lastBreath)
+        {
+            AudioManager.Instance.PlayJumpAudio();
+            float direction = GameManager.Instance.HoopInRight ? 1 : -1;
+            rb.velocity = new Vector2(jumpForce.x * direction, jumpForce.y);
+        }
     }
 }
