@@ -7,8 +7,6 @@ public class Hoop : MonoBehaviour
     [SerializeField] private bool isRight;
     [SerializeField] private Collider2D[] colliders;
     private BoxCollider2D trigger;
-    [SerializeField] private Animator netAnimator;
-    [SerializeField] private SpriteRenderer netSprite;
     [SerializeField] private SpriteRenderer burnSprite;
     [SerializeField] private ParticleSystem burnEffect;
     [SerializeField] private SpriteRenderer bigScoreSprite;
@@ -21,14 +19,16 @@ public class Hoop : MonoBehaviour
     private void Start()
     {
         trigger = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
         initPosition = transform.position;
+
+        GameManager.Instance.OnScore += TriggerBigScoreEffect;
     }
 
     public void WakeUp()
     {
         initPosition.y = Random.Range(setting.lowestXPosition, setting.highestXPosition);
         SetCollidersActive(true);
-        isScored = false;
         StartCoroutine(GetIn());
     }
 
@@ -43,6 +43,7 @@ public class Hoop : MonoBehaviour
             transform.position = Vector3.Lerp(initPosition, endPosition, lerp / setting.getInTime);
             yield return null;
         }
+        isScored = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -51,18 +52,18 @@ public class Hoop : MonoBehaviour
         {
             if (GameManager.Instance.IsOnBurn)
             {
-                animator.SetTrigger("Burn Score");
+                animator.SetTrigger("On Burn Score");
             }
             else
             {
-                netAnimator.SetTrigger("On Score");
+                animator.SetTrigger("On Score");
             }
+
             if (Ball.Instance.CheckCombo())
             {
-                TriggerBigScoreEffect();
+                isScored = true;
+                StartCoroutine(GetOut());
             }
-            isScored = true;
-            StartCoroutine(GetOut());
         }
     }
 
@@ -79,8 +80,6 @@ public class Hoop : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, initPosition, lerp / setting.getOutTime);
             yield return null;
         }
-
-        ResetDisplay();
     }
 
     private void SetCollidersActive(bool value)
@@ -91,18 +90,15 @@ public class Hoop : MonoBehaviour
         }
     }
 
-    private void TriggerNormalScoreEffect()
-    {
-    }
-
     public void PlayParticleEffect()
     {
         burnEffect.Play();
     }
 
-    private void TriggerBigScoreEffect()
+    private void TriggerBigScoreEffect(bool combo)
     {
-        StartCoroutine(ScoreEffect());
+        if (combo && !isScored)
+            StartCoroutine(ScoreEffect());
     }
 
     private IEnumerator ScoreEffect()
@@ -128,11 +124,5 @@ public class Hoop : MonoBehaviour
 
         bigScoreSprite.enabled = false;
         bigScoreSprite.color = Color.white;
-    }
-
-    private void ResetDisplay()
-    {
-        netSprite.enabled = true;
-        burnSprite.enabled = false;
     }
 }

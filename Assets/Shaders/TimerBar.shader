@@ -104,7 +104,7 @@
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 
-                color = color * lerp(_Color1, _Color2, _Fill);
+                color = lerp(_Color1, _Color2, _Fill);
 
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);

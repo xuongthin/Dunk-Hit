@@ -25,6 +25,13 @@ public class GameOverGroup : MonoBehaviour
         StartCoroutine(ShowBackground());
     }
 
+    public void Hide()
+    {
+        enabled = false;
+        main.SetActive(false);
+        background.enabled = false;
+    }
+
     private IEnumerator ShowBackground()
     {
         Color tempColor = background.color;

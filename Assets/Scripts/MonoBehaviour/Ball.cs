@@ -116,7 +116,7 @@ public class Ball : MonoBehaviour
                 if (effect.isPlaying)
                     effect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
-            return false;
+            return true;
         }
     }
 

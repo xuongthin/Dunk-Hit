@@ -15,6 +15,7 @@ public class GameUIManager : MonoBehaviour
 
     [Header("In Game")]
     [SerializeField] private Image timerBar;
+    [SerializeField] private Transform timeGroup;
     private Material timerBarMaterial;
     [SerializeField] private Text challenge;
     [SerializeField] private CanvasGroup challengeCanvas;
@@ -25,7 +26,6 @@ public class GameUIManager : MonoBehaviour
     [Header("Pause")]
     [SerializeField] private GameObject pauseGroup;
     // [Header("Game Over")]
-    // [SerializeField] private GameObject gameOverGroup;
     [Header("End Game")]
     [SerializeField] private GameObject endgameGroup;
     [SerializeField] private Text endGameScore;
@@ -45,9 +45,10 @@ public class GameUIManager : MonoBehaviour
 
         GameManager.Instance.OnResume += delegate () { pauseGroup.SetActive(false); };
 
+        GameManager.Instance.OnTimeOut += delegate () { isPlaying = false; };
+
         GameManager.Instance.OnRevive += delegate ()
         {
-            // gameOverGroup.SetActive(false);
             isPlaying = true;
         };
 
@@ -98,7 +99,7 @@ public class GameUIManager : MonoBehaviour
 
     public void ShowEndgameGroup()
     {
-        // gameOverGroup.SetActive(false);
+        isPlaying = false;
         endgameGroup.SetActive(true);
         endGameScore.text = GameManager.Instance.Score.ToString();
         bestScore.text = PlayerPrefs.GetInt("High Score", 0).ToString();
@@ -116,6 +117,15 @@ public class GameUIManager : MonoBehaviour
             float timerBarFill = GameManager.Instance.TimeRemainInPercent;
             timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
             timerBarMaterial.SetFloat("_Fill", timerBar.fillAmount);
+
+            if (timerBarFill < 0.25f)
+            {
+                timeGroup.localScale = Vector3.one * (1 + 0.05f * Mathf.Sin(7.5f * Time.time));
+            }
+            else
+            {
+                timeGroup.localScale = Vector3.one;
+            }
         }
     }
 

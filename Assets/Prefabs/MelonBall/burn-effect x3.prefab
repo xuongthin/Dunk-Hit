@@ -2622,7 +2622,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
   NoiseModule:
-    enabled: 0
+    enabled: 1
     strength:
       serializedVersion: 2
       minMaxState: 0
@@ -4709,8 +4709,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dfc7ba88bba6f6c4ebda331c6fca441c, type: 2}
-  - {fileID: 2100000, guid: dfc7ba88bba6f6c4ebda331c6fca441c, type: 2}
+  - {fileID: 2100000, guid: 3f42113558d52f644b0e593e6c844324, type: 2}
+  - {fileID: 2100000, guid: 3f42113558d52f644b0e593e6c844324, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

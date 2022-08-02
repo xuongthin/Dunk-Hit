@@ -5,13 +5,18 @@ using UnityEngine;
 
 public class SkinGroup : MonoBehaviour
 {
-    [SerializeField] private Vector3 hidePosition;
     [SerializeField] private float time;
+    private Vector3 hidePosition;
     private CanvasGroup canvasGroup;
 
     private void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        hidePosition = new Vector3(0, -Screen.height, transform.position.z);
+        rectTransform.anchoredPosition = hidePosition;
+
+        gameObject.SetActive(true);
     }
 
     public void Show()
