@@ -983,17 +983,17 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 1
-          inSlope: -0.4854355
-          outSlope: -0.4854355
+          inSlope: -0.83280945
+          outSlope: -0.83280945
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.5145645
-          inSlope: -0.4854355
-          outSlope: -0.4854355
+          value: 0.16719055
+          inSlope: -0.83280945
+          outSlope: -0.83280945
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -2622,7 +2622,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
   NoiseModule:
-    enabled: 0
+    enabled: 1
     strength:
       serializedVersion: 2
       minMaxState: 0

@@ -49,7 +49,7 @@ MonoBehaviour:
   ballCloneLeft: {fileID: 0}
   ballCloneRight: {fileID: 0}
   cloneOffset: {x: 12.5, y: 0}
-  jumpForce: {x: 4, y: 35}
+  jumpForce: {x: 4, y: 30}
   minComboSpeed: 10
   spriteRenderer: {fileID: 8615528506253628454}
 --- !u!50 &8615528506253628455

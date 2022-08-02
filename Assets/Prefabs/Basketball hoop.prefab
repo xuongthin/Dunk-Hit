@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5448150761398434272}
   - component: {fileID: 914575276784730277}
-  - component: {fileID: 7191138048379655922}
   m_Layer: 0
   m_Name: Net
   m_TagString: Untagged
@@ -82,25 +81,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &7191138048379655922
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 67123137558377326}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 328cf8253d6c5bf40b78eb582e42ad9b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &913598118115619559
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,7 +304,7 @@ Transform:
   - {fileID: 8676309750604059986}
   - {fileID: 2605269306453115979}
   m_Father: {fileID: 5921253382711996295}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4792704222597613648
 GameObject:
@@ -355,7 +335,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5921253382711996295}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2607126021991035664
 SpriteRenderer:
@@ -5303,11 +5283,11 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
+  m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
-  m_VertexStreams: 00010304
+  m_VertexStreams: 000304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -5405,6 +5385,7 @@ GameObject:
   - component: {fileID: 5921253382711996295}
   - component: {fileID: 6289213843030289799}
   - component: {fileID: 2467932533093454555}
+  - component: {fileID: 1489290634543184016}
   m_Layer: 0
   m_Name: Basketball hoop
   m_TagString: Untagged
@@ -5424,8 +5405,8 @@ Transform:
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children:
   - {fileID: 5448150761398434272}
-  - {fileID: 5390651672426921487}
   - {fileID: 6195821696217239643}
+  - {fileID: 5390651672426921487}
   - {fileID: 3639588456644683644}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -5448,9 +5429,8 @@ MonoBehaviour:
   - {fileID: 5306671842038150069}
   - {fileID: 4006485343250949258}
   - {fileID: 3910779785250672158}
-  netAnimator: {fileID: 7191138048379655922}
-  effectManager: {fileID: 0}
-  netSprire: {fileID: 914575276784730277}
+  netAnimator: {fileID: 0}
+  netSprite: {fileID: 914575276784730277}
   burnSprite: {fileID: 9124776444446558203}
   burnEffect: {fileID: 4071450027826056310}
   bigScoreSprite: {fileID: 2159354308839022257}
@@ -5478,5 +5458,24 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.63721704, y: 0.0447402}
+  m_Size: {x: 0.31, y: 0.51}
   m_EdgeRadius: 0
+--- !u!95 &1489290634543184016
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7857676518412070139}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4f6c7025c98a94f419e86578d59386e0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

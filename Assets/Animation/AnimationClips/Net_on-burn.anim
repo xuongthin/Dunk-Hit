@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Net_on-burn
+  m_Name: net_on-burn
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
