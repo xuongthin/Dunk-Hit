@@ -98,7 +98,10 @@ public class Hoop : MonoBehaviour
     private void TriggerBigScoreEffect(bool combo)
     {
         if (combo && !isScored)
+        {
+            animator.SetTrigger("On Perfect Score");
             StartCoroutine(ScoreEffect());
+        }
     }
 
     private IEnumerator ScoreEffect()
