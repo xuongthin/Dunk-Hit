@@ -1284,7 +1284,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -115.1001}
+  m_AnchoredPosition: {x: 0, y: -115.10016}
   m_SizeDelta: {x: 0, y: -230.28906}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &406003094
@@ -1762,6 +1762,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 658552235}
+  - component: {fileID: 658552236}
   m_Layer: 5
   m_Name: Time
   m_TagString: Untagged
@@ -1790,6 +1791,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -133}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &658552236
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658552234}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1d70945b38c2a4847b4f457663961a5d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &676259375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,7 +2449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerBar: {fileID: 2054527606}
-  timeGroup: {fileID: 658552235}
+  timerAnimator: {fileID: 658552236}
   challenge: {fileID: 1178280512}
   challengeCanvas: {fileID: 1178280514}
   scoreText: {fileID: 1732242589}

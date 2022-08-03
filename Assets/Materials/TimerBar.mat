@@ -25,7 +25,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _ColorMask: 15
-    - _Fill: 0.37688124
+    - _Fill: 0.055363204
     - _Glossiness: 0.5
     - _Metallic: 0
     - _Stencil: 0

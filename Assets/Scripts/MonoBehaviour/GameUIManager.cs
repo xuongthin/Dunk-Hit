@@ -15,7 +15,7 @@ public class GameUIManager : MonoBehaviour
 
     [Header("In Game")]
     [SerializeField] private Image timerBar;
-    [SerializeField] private Transform timeGroup;
+    [SerializeField] private Animator timerAnimator;
     private Material timerBarMaterial;
     [SerializeField] private Text challenge;
     [SerializeField] private CanvasGroup challengeCanvas;
@@ -41,9 +41,19 @@ public class GameUIManager : MonoBehaviour
 
         GameManager.Instance.OnScore += UpdateScore;
 
-        GameManager.Instance.OnPause += delegate () { pauseGroup.SetActive(true); };
+        GameManager.Instance.OnPause += delegate ()
+        {
+            isPlaying = false;
+            timerAnimator.enabled = false;
+            pauseGroup.SetActive(true);
+        };
 
-        GameManager.Instance.OnResume += delegate () { pauseGroup.SetActive(false); };
+        GameManager.Instance.OnResume += delegate ()
+        {
+            isPlaying = true;
+            timerAnimator.enabled = true;
+            pauseGroup.SetActive(false);
+        };
 
         GameManager.Instance.OnTimeOut += delegate () { isPlaying = false; };
 
@@ -118,14 +128,7 @@ public class GameUIManager : MonoBehaviour
             timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
             timerBarMaterial.SetFloat("_Fill", timerBar.fillAmount);
 
-            if (timerBarFill < 0.25f)
-            {
-                timeGroup.localScale = Vector3.one * (1 + 0.05f * Mathf.Sin(7.5f * Time.time));
-            }
-            else
-            {
-                timeGroup.localScale = Vector3.one;
-            }
+            timerAnimator.SetBool("Warning", timerBarFill <= 0.25f);
         }
     }
 
