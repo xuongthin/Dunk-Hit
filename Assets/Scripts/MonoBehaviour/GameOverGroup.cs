@@ -57,7 +57,7 @@ public class GameOverGroup : MonoBehaviour
         timerBar.fillAmount = timer / secondChanceTime;
         if (timer < 0)
         {
-            GameManager.Instance.OnEndGame();
+            GiveUp();
         }
     }
 

@@ -45,8 +45,8 @@ public class MenuManager : MonoBehaviour
 
     private void PlayIntro()
     {
-        string trigger = AudioManager.Instance.CheckFirstTime() ? "Open Game" : "Open Scene";
-        homeAnimator.SetTrigger(trigger);
+        string animationName = AudioManager.Instance.CheckFirstTime() ? "Open Game" : "Open Scene";
+        homeAnimator.Play(animationName);
     }
 
     private void SetPlayButtonSkin()

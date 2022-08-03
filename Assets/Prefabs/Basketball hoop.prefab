@@ -5400,7 +5400,8 @@ MonoBehaviour:
   - {fileID: 3910779785250672158}
   burnSprite: {fileID: 0}
   burnEffect: {fileID: 4071450027826056310}
-  bigScoreSprite: {fileID: 2159354308839022257}
+  addScoreEffect: {fileID: 0}
+  showScorePosition: {x: 2.5, y: 1.05, z: 0}
 --- !u!61 &2467932533093454555
 BoxCollider2D:
   m_ObjectHideFlags: 0

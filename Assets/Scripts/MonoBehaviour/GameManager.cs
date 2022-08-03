@@ -61,19 +61,28 @@ public class GameManager : MonoBehaviour
             maxTime = currentLevel.initTime;
             timer = maxTime;
 
-            isPlaying = true;
+            isPlaying = false;
 
             WakeHoopUp();
         };
 
         OnScore += delegate (bool combo)
         {
+            isPlaying = true;
+
             if (combo)
             {
                 comboCount += 1;
                 score += comboCount >= 3 ? 8 : (comboCount == 2 ? 4 : 2);
 
-                flashEffect.SetTrigger("Trigger");
+                if (IsOnBurn)
+                {
+                    flashEffect.SetTrigger("On Burn Score");
+                }
+                else
+                {
+                    flashEffect.SetTrigger("On Score");
+                }
             }
             else
             {
@@ -104,10 +113,10 @@ public class GameManager : MonoBehaviour
 
         OnEndGame += delegate ()
         {
-            int hightScore = PlayerPrefs.GetInt("High Score", 0);
-            if (score > hightScore)
+            int hightScore = PlayerPrefs.GetInt("HighScore", 0);
+            if (score > hightScore || hightScore == 0)
             {
-                PlayerPrefs.SetInt("High Score", score);
+                PlayerPrefs.SetInt("HighScore", score);
             }
         };
 

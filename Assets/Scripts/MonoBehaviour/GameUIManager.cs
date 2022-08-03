@@ -16,7 +16,7 @@ public class GameUIManager : MonoBehaviour
     [Header("In Game")]
     [SerializeField] private Image timerBar;
     [SerializeField] private Animator timerAnimator;
-    private Material timerBarMaterial;
+    [Range(0, 1)][SerializeField] private float rushTimeThreshold;
     [SerializeField] private Text challenge;
     [SerializeField] private CanvasGroup challengeCanvas;
     [SerializeField] private Text scoreText;
@@ -35,8 +35,6 @@ public class GameUIManager : MonoBehaviour
 
     private void Start()
     {
-        timerBarMaterial = timerBar.material;
-
         GameManager.Instance.OnGameStart += OnGameStart;
 
         GameManager.Instance.OnScore += UpdateScore;
@@ -107,12 +105,19 @@ public class GameUIManager : MonoBehaviour
         GameManager.Instance.OnRevive();
     }
 
-    public void ShowEndgameGroup()
+    private void ShowEndgameGroup()
     {
         isPlaying = false;
         endgameGroup.SetActive(true);
-        endGameScore.text = GameManager.Instance.Score.ToString();
-        bestScore.text = PlayerPrefs.GetInt("High Score", 0).ToString();
+
+        int score = GameManager.Instance.Score;
+        int theBestScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (score >= theBestScore)
+        {
+            endGameScore.color = bestScore.color;
+        }
+        endGameScore.text = score.ToString();
+        bestScore.text = theBestScore.ToString();
     }
 
     public void Replay()
@@ -126,9 +131,8 @@ public class GameUIManager : MonoBehaviour
         {
             float timerBarFill = GameManager.Instance.TimeRemainInPercent;
             timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
-            timerBarMaterial.SetFloat("_Fill", timerBar.fillAmount);
 
-            timerAnimator.SetBool("Warning", timerBarFill <= 0.25f);
+            timerAnimator.SetBool("Warning", timerBarFill <= rushTimeThreshold);
         }
     }
 

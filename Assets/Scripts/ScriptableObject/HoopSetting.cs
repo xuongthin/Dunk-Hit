@@ -14,11 +14,4 @@ public class HoopSetting : ScriptableObject
     [Header("")]
     public float getOutDelay;
     public float getOutTime;
-    [Header("Effects")]
-    public float displayTime;
-    public float fadeTime;
-    public Sprite combo2;
-    public Sprite combo4;
-    public Sprite[] combo8;
-
 }

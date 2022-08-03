@@ -7,9 +7,9 @@ public class Hoop : MonoBehaviour
     [SerializeField] private bool isRight;
     [SerializeField] private Collider2D[] colliders;
     private BoxCollider2D trigger;
-    [SerializeField] private SpriteRenderer burnSprite;
     [SerializeField] private ParticleSystem burnEffect;
-    [SerializeField] private SpriteRenderer bigScoreSprite;
+    [SerializeField] private AddScoreEffect addScoreEffect;
+    [SerializeField] private Vector3 showScorePosition;
     private Animator animator;
 
     private Vector3 initPosition;
@@ -21,6 +21,7 @@ public class Hoop : MonoBehaviour
         trigger = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         initPosition = transform.position;
+        showScorePosition.x *= isRight ? -1 : 1;
 
         GameManager.Instance.OnScore += TriggerBigScoreEffect;
     }
@@ -52,11 +53,11 @@ public class Hoop : MonoBehaviour
         {
             if (GameManager.Instance.IsOnBurn)
             {
-                animator.SetTrigger("On Burn Score");
+                animator.Play("Burn", 0);
             }
             else
             {
-                animator.SetTrigger("On Score");
+                animator.Play("Score", 0);
             }
 
             if (Ball.Instance.CheckCombo())
@@ -99,33 +100,15 @@ public class Hoop : MonoBehaviour
     {
         if (combo && !isScored)
         {
-            animator.SetTrigger("On Perfect Score");
-            StartCoroutine(ScoreEffect());
+            animator.Play("Perfect", 1);
+            addScoreEffect.Trigger(transform.position + showScorePosition);
         }
     }
 
-    private IEnumerator ScoreEffect()
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
     {
-        int combo = GameManager.Instance.ComboCount;
-        if (combo == 1)
-            bigScoreSprite.sprite = setting.combo2;
-        else if (combo == 2)
-            bigScoreSprite.sprite = setting.combo4;
-        else
-            bigScoreSprite.sprite = setting.combo8[Random.Range(0, setting.combo8.Length)];
-
-        bigScoreSprite.enabled = true;
-        yield return Yielders.Get(setting.displayTime);
-        float lerp = setting.fadeTime;
-        Color temp = Color.white;
-        while (lerp >= 0)
-        {
-            lerp -= Time.deltaTime;
-            temp.a = lerp / setting.fadeTime;
-            bigScoreSprite.color = temp;
-        }
-
-        bigScoreSprite.enabled = false;
-        bigScoreSprite.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position + showScorePosition, 0.1f);
     }
+#endif
 }

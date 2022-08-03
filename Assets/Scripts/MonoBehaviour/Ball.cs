@@ -20,6 +20,7 @@ public class Ball : MonoBehaviour
     private Sprite mainSkin;
     private Sprite fireSkin;
     private ParticleSystem[] effects;
+    private ParticleSystem currentEffect;
 
     private Vector2 _pausedVelocity;
     private float _pausedAngularVelocity;
@@ -31,6 +32,15 @@ public class Ball : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         GameManager.Instance.OnPause += Froze;
         GameManager.Instance.OnResume += Defrost;
+        GameManager.Instance.OnRevive += delegate ()
+        {
+            rb.position = new Vector2(0, 3);
+            if (currentEffect != null)
+            {
+                currentEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                currentEffect.Play();
+            }
+        };
     }
 
     public void SetSkin(Sprite skin)
@@ -76,6 +86,16 @@ public class Ball : MonoBehaviour
         }
     }
 
+    public void Jump()
+    {
+        if (!lastBreath)
+        {
+            AudioManager.Instance.PlayJumpAudio();
+            float direction = GameManager.Instance.HoopInRight ? 1 : -1;
+            rb.velocity = new Vector2(jumpForce.x * direction, jumpForce.y);
+        }
+    }
+
     public bool CheckCombo()
     {
         if (rb.velocity.y > 0)
@@ -94,12 +114,13 @@ public class Ball : MonoBehaviour
         {
             GameManager.Instance.OnScore(true);
             int combo = GameManager.Instance.ComboCount;
-            if (combo <= 3)
-            {
-                effects[combo - 1].Play();
-                if (combo > 1)
-                    effects[combo - 2].Stop(false, ParticleSystemStopBehavior.StopEmitting);
-            }
+            // if (combo <= 3)
+            // {
+            //     effects[combo - 1].Play();
+            //     if (combo > 1)
+            //         effects[combo - 2].Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            // }
+            ChangeEffect(combo - 1);
             if (GameManager.Instance.IsOnBurn)
             {
                 spriteRenderer.sprite = fireSkin;
@@ -111,12 +132,32 @@ public class Ball : MonoBehaviour
         {
             GameManager.Instance.OnScore(false);
             spriteRenderer.sprite = mainSkin;
-            foreach (var effect in effects)
-            {
-                if (effect.isPlaying)
-                    effect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            }
+            // foreach (var effect in effects)
+            // {
+            //     if (effect.isPlaying)
+            //         effect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            // }
+            ChangeEffect(-1);
             return true;
+        }
+    }
+
+    private void ChangeEffect(int newEffectId)
+    {
+        if (currentEffect != null)
+        {
+            currentEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        if (newEffectId < 0)
+        {
+            currentEffect = null;
+        }
+        else
+        {
+            newEffectId = Mathf.Clamp(newEffectId, 0, effects.Length - 1);
+            currentEffect = effects[newEffectId];
+            currentEffect.Play();
         }
     }
 
@@ -129,11 +170,13 @@ public class Ball : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Static;
         }
 
-        foreach (ParticleSystem particle in effects)
-        {
-            if (particle.isPlaying)
-                particle.Pause();
-        }
+        // foreach (ParticleSystem particle in effects)
+        // {
+        //     if (particle.isPlaying)
+        //         particle.Pause();
+        // }
+        if (currentEffect != null && currentEffect.isPlaying)
+            currentEffect.Pause();
     }
 
     private void Defrost()
@@ -145,20 +188,12 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = _pausedAngularVelocity;
         }
 
-        foreach (ParticleSystem particle in effects)
-        {
-            if (particle.isPaused)
-                particle.Play();
-        }
-    }
-
-    public void Jump()
-    {
-        if (!lastBreath)
-        {
-            AudioManager.Instance.PlayJumpAudio();
-            float direction = GameManager.Instance.HoopInRight ? 1 : -1;
-            rb.velocity = new Vector2(jumpForce.x * direction, jumpForce.y);
-        }
+        // foreach (ParticleSystem particle in effects)
+        // {
+        //     if (particle.isPaused)
+        //         particle.Play();
+        // }
+        if (currentEffect != null && currentEffect.isPaused)
+            currentEffect.Play();
     }
 }
