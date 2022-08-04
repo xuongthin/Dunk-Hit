@@ -36,23 +36,24 @@ public class Tracker : MonoBehaviour
     {
         GameManager.Instance.OnScore += delegate (bool perfect)
         {
+            currentScore = GameManager.Instance.Score;
+            if (currentScore > trackValues[(int)TrackedDataType.BestScore])
+                trackValues[(int)TrackedDataType.BestScore] = currentScore;
+
             trackValues[(int)TrackedDataType.TotalScoreBasket] += 1;
+            currentScoreBasket += 1;
+            if (currentScoreBasket > trackValues[(int)TrackedDataType.BestScoreBasket])
+                trackValues[(int)TrackedDataType.BestScoreBasket] = currentScoreBasket;
 
             if (perfect)
             {
                 trackValues[(int)TrackedDataType.TotalPerfect] += 1;
                 currentPerfectChain++;
                 if (currentPerfectChain > trackValues[(int)TrackedDataType.BestPerfectChain])
-                {
                     trackValues[((int)TrackedDataType.BestPerfectChain)] = currentPerfectChain;
-                }
             }
             else
                 currentPerfectChain = 0;
-
-            currentScore = GameManager.Instance.Score;
-            if (currentScore > trackValues[(int)TrackedDataType.BestScore])
-                trackValues[(int)TrackedDataType.BestScore] = currentScore;
 
             CheckSkinsData();
         };

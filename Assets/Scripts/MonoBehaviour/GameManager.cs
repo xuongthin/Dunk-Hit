@@ -113,15 +113,6 @@ public class GameManager : MonoBehaviour
             isPlaying = true;
         };
 
-        OnEndGame += delegate ()
-        {
-            int hightScore = PlayerPrefs.GetInt("HighScore", 0);
-            if (score > hightScore || hightScore == 0)
-            {
-                PlayerPrefs.SetInt("HighScore", score);
-            }
-        };
-
         Tracker.Instance.Attach();
         Ball.Instance.SetSkin(playerSetting.mainSkin, playerSetting.onFireSkin, playerSetting.effects[0], playerSetting.effects[1], playerSetting.effects[2]);
         StartCoroutine(Start(0.25f));

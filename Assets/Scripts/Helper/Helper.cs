@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,6 +62,27 @@ public static class Helper
         return target;
     }
 
+    // public static bool CompareNSet<T>(this T current, T other, CompareType compareType) where T : IComparable
+    // {
+    //     switch (compareType)
+    //     {
+    //         case CompareType.Equal:
+    //             current.ReplayOrNot<T>(other, currentCompareNSet )
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    //     return false;
+    // }
+
+    // public static bool ReplayOrNot<T>(this T current, T other, bool doit)
+    // {
+    //     if (doit)
+    //         current = other;
+
+    //     return doit;
+    // }
+
     /// <summary>
     /// Logs a message to Unity Console (only work in Editor)
     /// </summary>
@@ -72,3 +94,13 @@ public static class Helper
 #endif
     }
 }
+
+// public enum CompareType
+// {
+//     Equal,
+//     Greater,
+//     Less,
+//     GreaterOrEqual,
+//     LessOrEqual,
+//     Different
+// }

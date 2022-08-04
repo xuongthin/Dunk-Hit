@@ -98,11 +98,8 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public bool CheckCombo()
+    public void CheckCombo()
     {
-        if (rb.velocity.y > 0)
-            return false;
-
         AudioManager.Instance.PlayScoreSound();
         lastBreath = false;
 
@@ -122,7 +119,6 @@ public class Ball : MonoBehaviour
             GameManager.Instance.OnScore(false);
             ChangeDisplay(-1);
         }
-        return true;
     }
 
     private void InitPositionNVelocity()

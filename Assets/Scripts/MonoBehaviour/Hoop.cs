@@ -35,10 +35,12 @@ public class Hoop : MonoBehaviour
         isScored = false;
     }
 
-    public void OnBallEnter(Collider2D other)
+    public void OnBallExit(Collider2D other)
     {
-        if (!isScored && other.transform.position.y > trigger.position.y)
+        if (!isScored && other.transform.position.y < trigger.position.y)
         {
+            Ball.Instance.CheckCombo();
+
             if (GameManager.Instance.IsOnBurn)
             {
                 animator.Play("Burn", 1);
@@ -48,11 +50,8 @@ public class Hoop : MonoBehaviour
                 animator.Play("Score", 1);
             }
 
-            if (Ball.Instance.CheckCombo())
-            {
-                isScored = true;
-                animator.Play("Get Out", 0);
-            }
+            isScored = true;
+            animator.Play("Get Out", 0);
         }
     }
 

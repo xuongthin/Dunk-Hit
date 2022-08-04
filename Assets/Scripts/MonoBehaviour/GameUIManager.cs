@@ -118,7 +118,7 @@ public class GameUIManager : MonoBehaviour
         endgameGroup.SetActive(true);
 
         int score = GameManager.Instance.Score;
-        int theBestScore = PlayerPrefs.GetInt("HighScore", 0);
+        int theBestScore = Tracker.Instance.GetData(((int)TrackedDataType.BestScore));
         if (score >= theBestScore)
         {
             endGameScore.color = bestScore.color;

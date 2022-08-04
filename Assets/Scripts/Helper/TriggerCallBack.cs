@@ -7,7 +7,7 @@ public class TriggerCallBack : MonoBehaviour
 {
     public Collider2DEvent OnTriggerEnter;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         OnTriggerEnter?.Invoke(other);
     }
