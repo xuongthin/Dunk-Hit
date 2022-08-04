@@ -14,9 +14,9 @@ public class MenuManager : MonoBehaviour
     }
 
     [SerializeField] private PlayerSetting playerSetting;
-    [SerializeField] private SkinsSetting skinsSetting;
+    [SerializeField] private SkinsData skinsSetting;
 
-    [SerializeField] private Text highScore;
+    [SerializeField] private Text bestScore;
     [SerializeField] private Image playImage;
     [SerializeField] private Animator homeAnimator;
     [Header("Setting group")]
@@ -31,7 +31,6 @@ public class MenuManager : MonoBehaviour
     public Transform GetMark => mark;
     private int skinId;
     public int SkinId => skinId;
-
 
     private void Start()
     {
@@ -57,8 +56,8 @@ public class MenuManager : MonoBehaviour
 
     private void LoadPlayerSave()
     {
-        int bestScore = PlayerPrefs.GetInt("High Score", 0);
-        highScore.text = bestScore.ToString();
+        int bestScore = PlayerPrefs.GetInt("HighScore", 0);
+        this.bestScore.text = bestScore.ToString();
 
         skinId = PlayerPrefs.GetInt("Skin", 0);
         SetSkin(skinId);

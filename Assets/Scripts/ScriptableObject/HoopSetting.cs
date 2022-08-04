@@ -7,11 +7,4 @@ public class HoopSetting : ScriptableObject
 {
     public float lowestXPosition;
     public float highestXPosition;
-    public float moveYAmount;
-    [Header("")]
-    public float getInDelay;
-    public float getInTime;
-    [Header("")]
-    public float getOutDelay;
-    public float getOutTime;
 }

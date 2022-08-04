@@ -3,8 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-// TODO: time out warning
-
 public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager Instance;
@@ -19,19 +17,21 @@ public class GameUIManager : MonoBehaviour
     [Range(0, 1)][SerializeField] private float rushTimeThreshold;
     [SerializeField] private Text challenge;
     [SerializeField] private CanvasGroup challengeCanvas;
+    [SerializeField] private Animator scoreAnimator;
     [SerializeField] private Text scoreText;
+    [SerializeField] private Text additionalScore;
     [SerializeField] private Text perfectCount;
     [SerializeField] private GameObject perfectGroup;
 
     [Header("Pause")]
     [SerializeField] private GameObject pauseGroup;
-    // [Header("Game Over")]
     [Header("End Game")]
     [SerializeField] private GameObject endgameGroup;
     [SerializeField] private Text endGameScore;
     [SerializeField] private Text bestScore;
 
     private bool isPlaying;
+    private int previousScore;
 
     private void Start()
     {
@@ -61,27 +61,34 @@ public class GameUIManager : MonoBehaviour
         };
 
         GameManager.Instance.OnEndGame += ShowEndgameGroup;
+
+        previousScore = 0;
     }
 
     public void OnGameStart()
     {
         isPlaying = true;
         challenge.text = GameManager.Instance.GetCurrentLevel.description;
-        StartCoroutine(Fade(challengeCanvas, 2, 0.75f));
+        StartCoroutine(Fade(challengeCanvas, 2, 1.5f));
     }
 
     public void UpdateScore(bool combo)
     {
-        scoreText.text = GameManager.Instance.Score.ToString();
+        int newScore = GameManager.Instance.Score;
+        scoreText.text = newScore.ToString();
+        additionalScore.text = "+" + (newScore - previousScore).ToString();
+        previousScore = newScore;
         if (combo)
         {
+            int comboCount = GameManager.Instance.ComboCount;
+            perfectCount.text = "x" + comboCount.ToString();
             perfectGroup.SetActive(true);
-            perfectCount.text = "x" + GameManager.Instance.ComboCount.ToString();
         }
         else
         {
             perfectGroup.SetActive(false);
         }
+        scoreAnimator.Play("Score");
     }
 
     public void BackHome()

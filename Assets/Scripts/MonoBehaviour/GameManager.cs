@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
                 if (IsOnBurn)
                 {
+                    AudioManager.Instance.Vibrate();
                     flashEffect.SetTrigger("On Burn Score");
                 }
                 else
@@ -101,6 +102,7 @@ public class GameManager : MonoBehaviour
         OnTimeOut += delegate ()
         {
             isPlaying = false;
+            comboCount = 0;
         };
 
         OnRevive += delegate ()

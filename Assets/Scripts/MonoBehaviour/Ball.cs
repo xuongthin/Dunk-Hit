@@ -18,7 +18,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
     private Sprite mainSkin;
-    private Sprite fireSkin;
+    private Sprite burnSkin;
     private ParticleSystem[] effects;
     private ParticleSystem currentEffect;
 
@@ -34,13 +34,10 @@ public class Ball : MonoBehaviour
         GameManager.Instance.OnResume += Defrost;
         GameManager.Instance.OnRevive += delegate ()
         {
-            rb.position = new Vector2(0, 3);
-            if (currentEffect != null)
-            {
-                currentEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                currentEffect.Play();
-            }
+            InitRigidbody();
         };
+
+        InitRigidbody();
     }
 
     public void SetSkin(Sprite skin)
@@ -52,7 +49,7 @@ public class Ball : MonoBehaviour
     {
         spriteRenderer.sprite = skin1;
         mainSkin = skin1;
-        fireSkin = skin2;
+        burnSkin = skin2;
         effects = new ParticleSystem[3];
         effects[0] = Instantiate(effectPrefab1, transform).GetComponent<ParticleSystem>();
         effects[1] = Instantiate(effectPrefab2, transform).GetComponent<ParticleSystem>();
@@ -83,6 +80,7 @@ public class Ball : MonoBehaviour
         {
             lastBreath = false;
             GameManager.Instance.OfficialTimeOut();
+            ChangeDisplay(-1);
         }
     }
 
@@ -113,36 +111,23 @@ public class Ball : MonoBehaviour
         if (rb.velocity.sqrMagnitude > minComboSpeed * minComboSpeed)
         {
             GameManager.Instance.OnScore(true);
-            int combo = GameManager.Instance.ComboCount;
-            // if (combo <= 3)
-            // {
-            //     effects[combo - 1].Play();
-            //     if (combo > 1)
-            //         effects[combo - 2].Stop(false, ParticleSystemStopBehavior.StopEmitting);
-            // }
-            ChangeEffect(combo - 1);
-            if (GameManager.Instance.IsOnBurn)
-            {
-                spriteRenderer.sprite = fireSkin;
-                AudioManager.Instance.Vibrate();
-            }
-            return true;
+            ChangeDisplay(GameManager.Instance.ComboCount - 1);
         }
         else
         {
             GameManager.Instance.OnScore(false);
-            spriteRenderer.sprite = mainSkin;
-            // foreach (var effect in effects)
-            // {
-            //     if (effect.isPlaying)
-            //         effect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            // }
-            ChangeEffect(-1);
-            return true;
+            ChangeDisplay(-1);
         }
+        return true;
     }
 
-    private void ChangeEffect(int newEffectId)
+    private void InitRigidbody()
+    {
+        rb.position = new Vector2(0, 0);
+        rb.velocity = new Vector2(0, 25);
+    }
+
+    private void ChangeDisplay(int newEffectId)
     {
         if (currentEffect != null)
         {
@@ -152,12 +137,18 @@ public class Ball : MonoBehaviour
         if (newEffectId < 0)
         {
             currentEffect = null;
+            spriteRenderer.sprite = mainSkin;
         }
         else
         {
             newEffectId = Mathf.Clamp(newEffectId, 0, effects.Length - 1);
             currentEffect = effects[newEffectId];
             currentEffect.Play();
+
+            if (newEffectId >= 2)
+            {
+                spriteRenderer.sprite = burnSkin;
+            }
         }
     }
 
@@ -170,11 +161,6 @@ public class Ball : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Static;
         }
 
-        // foreach (ParticleSystem particle in effects)
-        // {
-        //     if (particle.isPlaying)
-        //         particle.Pause();
-        // }
         if (currentEffect != null && currentEffect.isPlaying)
             currentEffect.Pause();
     }
@@ -188,11 +174,6 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = _pausedAngularVelocity;
         }
 
-        // foreach (ParticleSystem particle in effects)
-        // {
-        //     if (particle.isPaused)
-        //         particle.Play();
-        // }
         if (currentEffect != null && currentEffect.isPaused)
             currentEffect.Play();
     }

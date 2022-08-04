@@ -27,7 +27,7 @@ public class Hoop : MonoBehaviour
         Vector3 position = transform.position;
         position.y = newPositionY;
         transform.position = position;
-        animator.Play("Get In", 2);
+        animator.Play("Get In", 0);
     }
 
     public void ReadyToScore()
@@ -41,18 +41,17 @@ public class Hoop : MonoBehaviour
         {
             if (GameManager.Instance.IsOnBurn)
             {
-                animator.Play("Burn", 0);
+                animator.Play("Burn", 1);
             }
             else
             {
-                animator.Play("Score", 0);
+                animator.Play("Score", 1);
             }
 
             if (Ball.Instance.CheckCombo())
             {
                 isScored = true;
-                // StartCoroutine(GetOut());
-                animator.Play("Get Out", 2);
+                animator.Play("Get Out", 0);
             }
         }
     }
@@ -84,7 +83,7 @@ public class Hoop : MonoBehaviour
     {
         if (combo && !isScored)
         {
-            animator.Play("Perfect", 1);
+            animator.Play("Perfect", 2);
             addScoreEffect.Trigger(displayBigScorePosition.position);
         }
     }

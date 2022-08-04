@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LevelData
   m_EditorClassIdentifier: 
   levels:
-  - challenge: Endless
+  - description: Endless
     initTime: 10
-  - challenge: Endless? I guess.
+  - description: 
     initTime: 0

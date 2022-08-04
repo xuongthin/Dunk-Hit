@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SkinData", menuName = "Skin Data")]
-public class SkinsSetting : ScriptableObject
+public class SkinsData : ScriptableObject
 {
     public List<Skin> skins;
 }
@@ -17,6 +17,6 @@ public class Skin
     public GameObject burnEffect3;
     public bool unlocked;
     public string challenge;
-    [Range(0, 1)] public float process;
-    public int target;
+    public TrackedDataType conditionType;
+    public int condition;
 }
