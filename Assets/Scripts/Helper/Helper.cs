@@ -61,13 +61,14 @@ public static class Helper
         return target;
     }
 
-
-    public static bool IsOutOf(this Vector2 target, Vector2 bound)
+    /// <summary>
+    /// Logs a message to Unity Console (only work in Editor)
+    /// </summary>
+    /// <param name="log"></param>
+    public static void Log(this string log)
     {
-        if (target.x >= -bound.x / 2 && target.x <= bound.x / 2
-         && target.y >= -bound.y / 2 && target.y <= bound.y / 2)
-            return false;
-
-        return true;
+#if UNITY_EDITOR
+        Debug.Log(log);
+#endif
     }
 }

@@ -22,13 +22,59 @@ public class Tracker : MonoBehaviour
     [SerializeField] private SkinsData skinsData;
     private int[] trackValues;
     private string[] trackKeys;
+    private int currentScore;
+    private int currentScoreBasket;
+    private int currentPerfectChain;
 
     private void Start()
     {
         InitNLoad();
-        CheckSkinsData();
+        CheckSkinsData(true);
+    }
 
-        Debug.Log("Something");
+    public void Attach()
+    {
+        GameManager.Instance.OnScore += delegate (bool perfect)
+        {
+            trackValues[(int)TrackedDataType.TotalScoreBasket] += 1;
+
+            if (perfect)
+            {
+                trackValues[(int)TrackedDataType.TotalPerfect] += 1;
+                currentPerfectChain++;
+                if (currentPerfectChain > trackValues[(int)TrackedDataType.BestPerfectChain])
+                {
+                    trackValues[((int)TrackedDataType.BestPerfectChain)] = currentPerfectChain;
+                }
+            }
+            else
+                currentPerfectChain = 0;
+
+            currentScore = GameManager.Instance.Score;
+            if (currentScore > trackValues[(int)TrackedDataType.BestScore])
+                trackValues[(int)TrackedDataType.BestScore] = currentScore;
+
+            CheckSkinsData();
+        };
+
+        Ball.Instance.OnJump += delegate ()
+        {
+            trackValues[(int)TrackedDataType.TotalJump] += 1;
+            CheckSkinsData();
+        };
+
+        GameManager.Instance.OnEndGame += delegate ()
+        {
+            Save();
+        };
+    }
+
+    public int GetData(int id)
+    {
+        if (id >= 0 && id < trackValues.Length)
+            return trackValues[id];
+        else
+            return -1;
     }
 
     private void InitNLoad()
@@ -43,13 +89,34 @@ public class Tracker : MonoBehaviour
         }
     }
 
-    private void CheckSkinsData()
+    private void CheckSkinsData(bool onLoad = false)
     {
-        foreach (var skin in skinsData.skins)
+        foreach (Skin skin in skinsData.skins)
         {
             if (!skin.unlocked)
-                CheckCondition(skin);
+            {
+                if (CheckCondition(skin) && !onLoad)
+                {
+                    Unlock(skin);
+                    Save();
+                }
+            }
         }
+    }
+
+    private void Save()
+    {
+        int trackedDataTypeCount = Enum.GetNames(typeof(TrackedDataType)).Length;
+        for (int i = 0; i < trackedDataTypeCount; i++)
+        {
+            PlayerPrefs.SetInt(trackKeys[i], trackValues[i]);
+        }
+    }
+
+    private void Unlock(Skin skin)
+    {
+        // TODO: Invoke UI Manager function
+        // TODO: make sure UI Manager can handler multi commands
     }
 
     private void InitPref(out int value, string key)
@@ -62,21 +129,24 @@ public class Tracker : MonoBehaviour
         }
     }
 
-    private void CheckCondition(Skin skin)
+    private bool CheckCondition(Skin skin)
     {
         int process = trackValues[((int)skin.conditionType)];
-        skin.unlocked = process >= skin.condition;
+        bool check = process >= skin.condition;
+        skin.unlocked = check;
+        return check;
     }
 }
 
 public enum TrackedDataType
 {
-    Jump,
-    Score,
+    TotalJump,
+    // most jump?
+    // TotalScore,
     BestScore,
-    ScoreBasket,
+    TotalScoreBasket,
     BestScoreBasket,
-    Perfect,
+    TotalPerfect,
     BestPerfectChain
 }
 

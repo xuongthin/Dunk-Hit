@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
             }
         };
 
+        Tracker.Instance.Attach();
         Ball.Instance.SetSkin(playerSetting.mainSkin, playerSetting.onFireSkin, playerSetting.effects[0], playerSetting.effects[1], playerSetting.effects[2]);
         StartCoroutine(Start(0.25f));
     }
@@ -166,4 +167,5 @@ public class GameManager : MonoBehaviour
         else
             OnTimeOut();
     }
+
 }

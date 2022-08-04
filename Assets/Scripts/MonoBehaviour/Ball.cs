@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,8 @@ public class Ball : MonoBehaviour
 
     private bool lastBreath;
 
+    public Action OnJump;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -34,10 +37,10 @@ public class Ball : MonoBehaviour
         GameManager.Instance.OnResume += Defrost;
         GameManager.Instance.OnRevive += delegate ()
         {
-            InitRigidbody();
+            InitPositionNVelocity();
         };
 
-        InitRigidbody();
+        InitPositionNVelocity();
     }
 
     public void SetSkin(Sprite skin)
@@ -91,6 +94,7 @@ public class Ball : MonoBehaviour
             AudioManager.Instance.PlayJumpAudio();
             float direction = GameManager.Instance.HoopInRight ? 1 : -1;
             rb.velocity = new Vector2(jumpForce.x * direction, jumpForce.y);
+            OnJump();
         }
     }
 
@@ -121,7 +125,7 @@ public class Ball : MonoBehaviour
         return true;
     }
 
-    private void InitRigidbody()
+    private void InitPositionNVelocity()
     {
         rb.position = new Vector2(0, 0);
         rb.velocity = new Vector2(0, 25);
