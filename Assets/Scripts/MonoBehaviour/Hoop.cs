@@ -9,45 +9,37 @@ public class Hoop : MonoBehaviour
     private BoxCollider2D trigger;
     [SerializeField] private ParticleSystem burnEffect;
     [SerializeField] private AddScoreEffect addScoreEffect;
-    [SerializeField] private Vector3 showScorePosition;
+    [SerializeField] private Transform displayBigScorePosition;
     private Animator animator;
 
     private Vector3 initPosition;
 
-    private bool isScored = true;  // for safe, in case the ball hit trigger multiple times (cuz bouncing).
+    private bool isScored = true;
 
     private void Start()
     {
         trigger = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         initPosition = transform.position;
-        showScorePosition.x *= isRight ? -1 : 1;
 
         GameManager.Instance.OnScore += TriggerBigScoreEffect;
     }
 
     public void WakeUp()
     {
-        initPosition.y = Random.Range(setting.lowestXPosition, setting.highestXPosition);
-        SetCollidersActive(true);
-        StartCoroutine(GetIn());
+        float newPositionY = Random.Range(setting.lowestXPosition, setting.highestXPosition);
+        Vector3 position = transform.position;
+        position.y = newPositionY;
+        transform.position = position;
+        animator.Play("Get In", 2);
     }
 
-    private IEnumerator GetIn()
+    public void ReadyToScore()
     {
-        yield return Yielders.Get(setting.getInDelay);
-        float lerp = 0.0f;
-        Vector3 endPosition = initPosition + Vector3.right * setting.moveYAmount * (isRight ? -1 : 1);
-        while (lerp < setting.getInTime)
-        {
-            lerp += Time.deltaTime;
-            transform.position = Vector3.Lerp(initPosition, endPosition, lerp / setting.getInTime);
-            yield return null;
-        }
         isScored = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnBallEnter(Collider2D other)
     {
         if (!isScored && other.transform.position.y > transform.position.y + trigger.offset.y)
         {
@@ -63,24 +55,25 @@ public class Hoop : MonoBehaviour
             if (Ball.Instance.CheckCombo())
             {
                 isScored = true;
-                StartCoroutine(GetOut());
+                // StartCoroutine(GetOut());
+                animator.Play("Get Out", 2);
             }
         }
     }
 
-    private IEnumerator GetOut()
+    public void EnableColliders()
     {
-        yield return Yielders.Get(setting.getOutDelay / 3);
+        SetCollidersActive(true);
+    }
+
+    public void DisableColliders()
+    {
         SetCollidersActive(false);
-        yield return Yielders.Get(setting.getOutDelay * 2 / 3);
-        float lerp = 0.0f;
-        Vector3 startPosition = transform.position;
-        while (lerp < setting.getOutTime)
-        {
-            lerp += Time.deltaTime;
-            transform.position = Vector3.Lerp(startPosition, initPosition, lerp / setting.getOutTime);
-            yield return null;
-        }
+    }
+
+    public void PlayParticleEffect()
+    {
+        burnEffect.Play();
     }
 
     private void SetCollidersActive(bool value)
@@ -91,24 +84,12 @@ public class Hoop : MonoBehaviour
         }
     }
 
-    public void PlayParticleEffect()
-    {
-        burnEffect.Play();
-    }
-
     private void TriggerBigScoreEffect(bool combo)
     {
         if (combo && !isScored)
         {
             animator.Play("Perfect", 1);
-            addScoreEffect.Trigger(transform.position + showScorePosition);
+            addScoreEffect.Trigger(displayBigScorePosition.position);
         }
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(transform.position + showScorePosition, 0.1f);
-    }
-#endif
 }
