@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44514556183792748}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.619, y: 1.1949997, z: 0}
+  m_LocalPosition: {x: 2.479, y: -0.145, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5390651672426921487}
@@ -45,7 +45,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.86, y: -1.34}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -5452,7 +5452,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5921253382711996295}
   - component: {fileID: 6289213843030289799}
-  - component: {fileID: 2467932533093454555}
   - component: {fileID: 1489290634543184016}
   m_Layer: 0
   m_Name: Basketball hoop
@@ -5494,36 +5493,10 @@ MonoBehaviour:
   - {fileID: 5306671842038150069}
   - {fileID: 4006485343250949258}
   - {fileID: 3910779785250672158}
+  trigger: {fileID: 8240387420557241876}
   burnEffect: {fileID: 4071450027826056310}
   addScoreEffect: {fileID: 0}
-  showScorePosition: {x: 2.5, y: 1.05, z: 0}
   displayBigScorePosition: {fileID: 4444011377947022763}
---- !u!61 &2467932533093454555
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7857676518412070139}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 2.45, y: -0.31}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.23, y: 3.79}
-    newSize: {x: 3.23, y: 3.79}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.31, y: 0.12}
-  m_EdgeRadius: 0
 --- !u!95 &1489290634543184016
 Animator:
   serializedVersion: 3

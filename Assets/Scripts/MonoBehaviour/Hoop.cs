@@ -6,21 +6,17 @@ public class Hoop : MonoBehaviour
     [SerializeField] private HoopSetting setting;
     [SerializeField] private bool isRight;
     [SerializeField] private Collider2D[] colliders;
-    private BoxCollider2D trigger;
+    [SerializeField] private Transform trigger;
     [SerializeField] private ParticleSystem burnEffect;
     [SerializeField] private AddScoreEffect addScoreEffect;
     [SerializeField] private Transform displayBigScorePosition;
     private Animator animator;
 
-    private Vector3 initPosition;
-
     private bool isScored = true;
 
     private void Start()
     {
-        trigger = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
-        initPosition = transform.position;
 
         GameManager.Instance.OnScore += TriggerBigScoreEffect;
     }
@@ -41,7 +37,7 @@ public class Hoop : MonoBehaviour
 
     public void OnBallEnter(Collider2D other)
     {
-        if (!isScored && other.transform.position.y > transform.position.y + trigger.offset.y)
+        if (!isScored && other.transform.position.y > trigger.position.y)
         {
             if (GameManager.Instance.IsOnBurn)
             {
