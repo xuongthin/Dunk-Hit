@@ -3,20 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class SkinButton : MonoBehaviour
 {
-    [SerializeField] private Color onLockColor;
+    [SerializeField] private SkinButtonSetting setting;
+    public Action<int> OnLockedClick;
     private Image image;
-
+    private Button button;
     private Skin data;
+
+    private int id;
+
 
     private void Start()
     {
         image = GetComponent<Image>();
-        int id = transform.GetSiblingIndex();
-        if (MenuManager.Instance.GetSkinList.Count > id)
-            data = MenuManager.Instance.GetSkinList[id];
+        button = GetComponent<Button>();
+
+        id = transform.GetSiblingIndex();
+        if (MenuManager.Instance.SkinList.Count > id)
+            data = MenuManager.Instance.SkinList[id];
 
         UpdateDisplay();
     }
@@ -26,13 +33,16 @@ public class SkinButton : MonoBehaviour
         if (data != null)
         {
             image.sprite = data.mainTexture;
-            image.color = data.unlocked ? Color.white : onLockColor;
+            image.color = data.unlocked ? Color.white : setting.onLockedColor;
+        }
+        else
+        {
+            button.interactable = false;
         }
 
         if (MenuManager.Instance.SkinId == transform.GetSiblingIndex())
         {
-            Transform marker = MenuManager.Instance.GetMark;
-            marker.position = transform.position;
+            MarkSelf();
         }
     }
 
@@ -42,8 +52,17 @@ public class SkinButton : MonoBehaviour
         if (data.unlocked)
         {
             MenuManager.Instance.SetSkin(transform.GetSiblingIndex());
-            Transform marker = MenuManager.Instance.GetMark;
-            marker.position = transform.position;
+            MarkSelf();
         }
+        else
+        {
+            OnLockedClick(id);
+        }
+    }
+
+    private void MarkSelf()
+    {
+        Transform marker = MenuManager.Instance.GetMark;
+        marker.position = transform.position;
     }
 }

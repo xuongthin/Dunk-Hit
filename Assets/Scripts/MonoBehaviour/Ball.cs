@@ -20,15 +20,14 @@ public class Ball : MonoBehaviour
     private Rigidbody2D rb;
     private Sprite mainSkin;
     private Sprite burnSkin;
-    private ParticleSystem[] effects;
-    private ParticleSystem currentEffect;
+    [SerializeField] private ParticleSystem jumpEffect;
+    [SerializeField] private ParticleSystem smokeEffect;
+    [SerializeField] private ParticleSystem burnEffect;
 
     private Vector2 _pausedVelocity;
     private float _pausedAngularVelocity;
-
     private bool lastBreath;
-
-    public Action OnJump;
+    private int effectState;
 
     private void Start()
     {
@@ -48,15 +47,13 @@ public class Ball : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = skin;
     }
 
-    public void SetSkin(Sprite skin1, Sprite skin2, GameObject effectPrefab1, GameObject effectPrefab2, GameObject effectPrefab3)
+    public void SetSkin(Sprite mainSkin, Sprite burnSkin, GameObject burnEffect)
     {
-        spriteRenderer.sprite = skin1;
-        mainSkin = skin1;
-        burnSkin = skin2;
-        effects = new ParticleSystem[3];
-        effects[0] = Instantiate(effectPrefab1, transform).GetComponent<ParticleSystem>();
-        effects[1] = Instantiate(effectPrefab2, transform).GetComponent<ParticleSystem>();
-        effects[2] = Instantiate(effectPrefab3, transform).GetComponent<ParticleSystem>();
+        this.mainSkin = mainSkin;
+        this.burnSkin = burnSkin;
+        spriteRenderer.sprite = mainSkin;
+        ParticleSystem burnEffectController = Instantiate(burnEffect, transform).GetComponent<ParticleSystem>();
+        this.burnEffect = burnEffectController;
     }
 
     public void SetTimeOut()
@@ -83,7 +80,7 @@ public class Ball : MonoBehaviour
         {
             lastBreath = false;
             GameManager.Instance.OfficialTimeOut();
-            ChangeDisplay(-1);
+            SetDisplay();
         }
     }
 
@@ -91,10 +88,13 @@ public class Ball : MonoBehaviour
     {
         if (!lastBreath)
         {
-            AudioManager.Instance.PlayJumpAudio();
             float direction = GameManager.Instance.HoopInRight ? 1 : -1;
             rb.velocity = new Vector2(jumpForce.x * direction, jumpForce.y);
-            OnJump();
+
+            AudioManager.Instance.PlayJumpAudio();
+            jumpEffect.Play();
+
+            Tracker.Instance.AddTotalJumpCount();
         }
     }
 
@@ -112,12 +112,12 @@ public class Ball : MonoBehaviour
         if (rb.velocity.sqrMagnitude > minComboSpeed * minComboSpeed)
         {
             GameManager.Instance.OnScore(true);
-            ChangeDisplay(GameManager.Instance.ComboCount - 1);
+            SetDisplay();
         }
         else
         {
             GameManager.Instance.OnScore(false);
-            ChangeDisplay(-1);
+            SetDisplay();
         }
     }
 
@@ -127,29 +127,41 @@ public class Ball : MonoBehaviour
         rb.velocity = new Vector2(0, 25);
     }
 
-    private void ChangeDisplay(int newEffectId)
+    private void SetDisplay()
     {
-        if (currentEffect != null)
+        int combo = GameManager.Instance.ComboCount;
+        int newEffectState = Mathf.Clamp(combo, 0, 3);
+        if (newEffectState != effectState)
         {
-            currentEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
-
-        if (newEffectId < 0)
-        {
-            currentEffect = null;
-            spriteRenderer.sprite = mainSkin;
-        }
-        else
-        {
-            newEffectId = Mathf.Clamp(newEffectId, 0, effects.Length - 1);
-            currentEffect = effects[newEffectId];
-            currentEffect.Play();
-
-            if (newEffectId >= 2)
+            if (newEffectState == 2)
+            {
+                spriteRenderer.sprite = mainSkin;
+                smokeEffect.Play();
+            }
+            else if (newEffectState == 3)
             {
                 spriteRenderer.sprite = burnSkin;
+                StopEffect(smokeEffect);
+                burnEffect.Play();
             }
+            else if (effectState == 2)
+            {
+                StopEffect(smokeEffect);
+            }
+            else if (effectState == 3)
+            {
+                spriteRenderer.sprite = mainSkin;
+                StopEffect(burnEffect);
+            }
+
+            effectState = newEffectState;
         }
+    }
+
+    private void StopEffect(ParticleSystem effect)
+    {
+        if (effect.isPlaying)
+            effect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     private void Froze()
@@ -161,8 +173,10 @@ public class Ball : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Static;
         }
 
-        if (currentEffect != null && currentEffect.isPlaying)
-            currentEffect.Pause();
+        if (effectState == 2)
+            smokeEffect.Pause();
+        else if (effectState == 3)
+            burnEffect.Pause();
     }
 
     private void Defrost()
@@ -174,7 +188,9 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = _pausedAngularVelocity;
         }
 
-        if (currentEffect != null && currentEffect.isPaused)
-            currentEffect.Play();
+        if (effectState == 2)
+            smokeEffect.Play();
+        else if (effectState == 3)
+            burnEffect.Play();
     }
 }

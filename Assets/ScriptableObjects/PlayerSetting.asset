@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: PlayerSetting
   m_EditorClassIdentifier: 
   mainSkin: {fileID: 21300000, guid: 522e8bbe6db02b14fbfdc403224cd288, type: 3}
-  onFireSkin: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
-  effects:
-  - {fileID: 639352579439443830, guid: c90e240d533ffe6498a319f91cf2d080, type: 3}
-  - {fileID: 1597553594849087251, guid: 911d2887fcd7399498f7b6efde494100, type: 3}
-  - {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24, type: 3}
-  isSoundOn: 1
-  isVibrationOn: 1
+  burnSkin: {fileID: 21300000, guid: 846ccf1d2ae29d146b489e007f8ba780, type: 3}
+  burnEffect: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
+    type: 3}
+  flashColor: {r: 1, g: 0.5116537, b: 0.2216981, a: 1}

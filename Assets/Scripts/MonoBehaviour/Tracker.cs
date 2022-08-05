@@ -58,16 +58,16 @@ public class Tracker : MonoBehaviour
             CheckSkinsData();
         };
 
-        Ball.Instance.OnJump += delegate ()
-        {
-            trackValues[(int)TrackedDataType.TotalJump] += 1;
-            CheckSkinsData();
-        };
-
         GameManager.Instance.OnEndGame += delegate ()
         {
             Save();
         };
+    }
+
+    public void AddTotalJumpCount()
+    {
+        trackValues[(int)TrackedDataType.TotalJump] += 1;
+        CheckSkinsData();
     }
 
     public int GetData(int id)

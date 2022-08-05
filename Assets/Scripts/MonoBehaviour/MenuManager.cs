@@ -14,7 +14,7 @@ public class MenuManager : MonoBehaviour
     }
 
     [SerializeField] private PlayerSetting playerSetting;
-    [SerializeField] private SkinsData skinsSetting;
+    [SerializeField] private SkinsData skinsData;
 
     [SerializeField] private Text bestScore;
     [SerializeField] private Image playImage;
@@ -23,11 +23,13 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private SettingGroup settingGroup;
     [SerializeField] private Toggle soundToggle;
     [SerializeField] private Toggle vibrationToggle;
+    [Header("Challenge group")]
+    [SerializeField] private GameObject challengeGroup;
     [Header("Skin group")]
     [SerializeField] private GameObject skinGroup;
     [SerializeField] private Transform mark;
 
-    public List<Skin> GetSkinList => skinsSetting.skins;
+    public List<Skin> SkinList => skinsData.skins;
     public Transform GetMark => mark;
     private int skinId;
     public int SkinId => skinId;
@@ -37,21 +39,46 @@ public class MenuManager : MonoBehaviour
         Application.targetFrameRate = 60;
 
         LoadPlayerSave();
-        SetPlayButtonSkin();
+        UpdatePlayButtonSkin();
 
         PlayIntro();
+    }
+
+    public void SetSound(bool value)
+    {
+        AudioManager.Instance.SetVolume(value);
+        PlayerPrefs.SetInt("Volume", value ? 1 : 0);
+    }
+
+    public void SetVibration(bool value)
+    {
+        AudioManager.Instance.isVibrationOn = value;
+        PlayerPrefs.SetInt("Vibration", value ? 1 : 0);
+    }
+
+    public void SetSkin(int id)
+    {
+        skinId = id;
+        PlayerPrefs.SetInt("Skin", id);
+        Skin skin = skinsData.skins[id];
+        playerSetting.mainSkin = skin.mainTexture;
+        playerSetting.burnSkin = skin.onFireTexture;
+        playerSetting.burnEffect = skin.burnEffect;
+        playerSetting.flashColor = skin.flashColor;
+
+        UpdatePlayButtonSkin();
+    }
+
+    public void PlayGame()
+    {
+        AudioManager.Instance.PlayGameAudio();
+        SceneManager.LoadScene("Game");
     }
 
     private void PlayIntro()
     {
         string animationName = AudioManager.Instance.CheckFirstTime() ? "Open Game" : "Open Scene";
         homeAnimator.Play(animationName);
-    }
-
-    private void SetPlayButtonSkin()
-    {
-        playImage.sprite = playerSetting.mainSkin;
-        playImage.SetNativeSize();
     }
 
     private void LoadPlayerSave()
@@ -69,44 +96,9 @@ public class MenuManager : MonoBehaviour
         AudioManager.Instance.isVibrationOn = vibrateSetting > 0;
     }
 
-    public void SetSound(bool value)
+    private void UpdatePlayButtonSkin()
     {
-        AudioManager.Instance.SetVolume(value);
-        PlayerPrefs.SetInt("Volume", value ? 1 : 0);
-    }
-
-    public void SetVibration(bool value)
-    {
-        AudioManager.Instance.isVibrationOn = value;
-        PlayerPrefs.SetInt("Vibration", value ? 1 : 0);
-    }
-
-    public void SetSkin(Sprite main, Sprite onFire)
-    {
-        playerSetting.mainSkin = main;
-        playerSetting.onFireSkin = onFire;
-
-        playImage.sprite = main;
+        playImage.sprite = playerSetting.mainSkin;
         playImage.SetNativeSize();
-    }
-
-    public void SetSkin(int id)
-    {
-        skinId = id;
-        PlayerPrefs.SetInt("Skin", id);
-        playerSetting.mainSkin = skinsSetting.skins[id].mainTexture;
-        playerSetting.onFireSkin = skinsSetting.skins[id].onFireTexture;
-        playerSetting.effects = new List<GameObject>();
-        playerSetting.effects.Add(skinsSetting.skins[id].burnEffect1);
-        playerSetting.effects.Add(skinsSetting.skins[id].burnEffect2);
-        playerSetting.effects.Add(skinsSetting.skins[id].burnEffect3);
-
-        SetPlayButtonSkin();
-    }
-
-    public void PlayGame()
-    {
-        AudioManager.Instance.PlayGameAudio();
-        SceneManager.LoadScene("Game");
     }
 }

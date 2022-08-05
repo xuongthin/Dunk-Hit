@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float timeDecreaseEachScore;
     [SerializeField] private float minTime;
     [SerializeField] private Animator flashEffect;
+    [SerializeField] private Image flashImage;
     private bool hoopInRight;
 
     private int score;
@@ -39,7 +41,6 @@ public class GameManager : MonoBehaviour
 
     public Action OnGameStart;
     public Action<bool> OnScore;
-    public Action<bool> OnStateChange;
     public Action OnPause;
     public Action OnResume;
     public Action<Challenge> OnWin;
@@ -75,20 +76,17 @@ public class GameManager : MonoBehaviour
                 comboCount += 1;
                 score += comboCount >= 3 ? 8 : (comboCount == 2 ? 4 : 2);
 
-                if (IsOnBurn)
+                if (comboCount == 3)
                 {
-                    AudioManager.Instance.Vibrate();
-                    flashEffect.SetTrigger("On Burn Score");
+                    flashImage.color = playerSetting.flashColor;
                 }
-                else
-                {
-                    flashEffect.SetTrigger("On Score");
-                }
+                flashEffect.SetTrigger("On Score");
             }
             else
             {
                 score += 1;
                 comboCount = 0;
+                flashImage.color = Color.white;
             }
             hoopInRight = !hoopInRight;
             UpdateTimer();
@@ -102,7 +100,6 @@ public class GameManager : MonoBehaviour
         OnTimeOut += delegate ()
         {
             isPlaying = false;
-            comboCount = 0;
         };
 
         OnRevive += delegate ()
@@ -114,7 +111,7 @@ public class GameManager : MonoBehaviour
         };
 
         Tracker.Instance.Attach();
-        Ball.Instance.SetSkin(playerSetting.mainSkin, playerSetting.onFireSkin, playerSetting.effects[0], playerSetting.effects[1], playerSetting.effects[2]);
+        Ball.Instance.SetSkin(playerSetting.mainSkin, playerSetting.burnSkin, playerSetting.burnEffect);
         StartCoroutine(Start(0.25f));
     }
 
@@ -153,6 +150,8 @@ public class GameManager : MonoBehaviour
 
     public void OfficialTimeOut()
     {
+        comboCount = 0;
+
         if (usedSecondChance)
             OnEndGame();
         else

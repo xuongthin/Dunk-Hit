@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public static class Helper
 {
@@ -93,14 +94,19 @@ public static class Helper
         Debug.Log(log);
 #endif
     }
+
+    public static string ColorCode(this Color color)
+    {
+        string o = color.r.ToString() + "," +
+                   color.g.ToString() + "," +
+                   color.b.ToString() + "," +
+                   color.a.ToString();
+        return o;
+    }
 }
 
-// public enum CompareType
-// {
-//     Equal,
-//     Greater,
-//     Less,
-//     GreaterOrEqual,
-//     LessOrEqual,
-//     Different
-// }
+[Serializable]
+public class IntCallBackEvent : UnityEvent<int>
+{
+
+}

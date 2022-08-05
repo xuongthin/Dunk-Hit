@@ -12,9 +12,8 @@ public class Skin
 {
     public Sprite mainTexture;
     public Sprite onFireTexture;
-    public GameObject burnEffect1;
-    public GameObject burnEffect2;
-    public GameObject burnEffect3;
+    public GameObject burnEffect;
+    public Color flashColor;
     public bool unlocked;
     public string challenge;
     public TrackedDataType conditionType;
