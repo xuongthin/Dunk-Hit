@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public static class Helper
 {
@@ -63,26 +64,16 @@ public static class Helper
         return target;
     }
 
-    // public static bool CompareNSet<T>(this T current, T other, CompareType compareType) where T : IComparable
-    // {
-    //     switch (compareType)
-    //     {
-    //         case CompareType.Equal:
-    //             current.ReplayOrNot<T>(other, currentCompareNSet )
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     return false;
-    // }
-
-    // public static bool ReplayOrNot<T>(this T current, T other, bool doit)
-    // {
-    //     if (doit)
-    //         current = other;
-
-    //     return doit;
-    // }
+    public static void SetSpriteAndResize(this Image UIImage, Sprite sprite)
+    {
+        Vector2 size = UIImage.rectTransform.sizeDelta;
+        UIImage.sprite = sprite;
+        UIImage.SetNativeSize();
+        Vector2 newSize = UIImage.rectTransform.sizeDelta;
+        float modification = size.x / newSize.x;
+        Vector2 reshapeSize = newSize * modification;
+        UIImage.rectTransform.sizeDelta = reshapeSize;
+    }
 
     /// <summary>
     /// Logs a message to Unity Console (only work in Editor)
