@@ -71,6 +71,12 @@ public class MenuManager : MonoBehaviour
 
     public void PlayGame()
     {
+        PlayGame(null);
+    }
+
+    public void PlayGame(Observer observer)
+    {
+        playerSetting.observer = observer;
         AudioManager.Instance.PlayGameAudio();
         SceneManager.LoadScene("Game");
     }

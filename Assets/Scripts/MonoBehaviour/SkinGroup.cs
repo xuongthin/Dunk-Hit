@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SkinGroup : MonoBehaviour
 {
-    [SerializeField] private Image skinGroupButton;
+    [SerializeField] private Image buttonFillImage;
     [SerializeField] private float animationTime;
     private CanvasGroup canvasGroup;
     [SerializeField] private Text skinUnlockProcessText;
@@ -17,6 +17,7 @@ public class SkinGroup : MonoBehaviour
     [SerializeField] private Text skinChallenge;
     [SerializeField] private Text processText;
     [SerializeField] private Image processBar;
+
     private Vector3 hidePosition;
 
     private const string OPEN = "Open";
@@ -29,7 +30,6 @@ public class SkinGroup : MonoBehaviour
         InitPosition();
         UpdateDisplay();
         LinkButtons();
-        gameObject.SetActive(true);
     }
 
     public void Show()
@@ -74,7 +74,7 @@ public class SkinGroup : MonoBehaviour
 
         skinUnlockProcessText.text = d.ToString() + "/" + skins.Count.ToString();
         skinUnlockProcessBar.fillAmount = (float)d / skins.Count;
-        skinGroupButton.fillAmount = (float)d / skins.Count;
+        buttonFillImage.fillAmount = (float)d / skins.Count;
     }
 
     private void LinkButtons()

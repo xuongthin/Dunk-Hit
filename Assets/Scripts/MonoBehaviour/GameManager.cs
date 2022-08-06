@@ -14,28 +14,27 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private LevelsSetting levelsSetting;
     [SerializeField] private PlayerSetting playerSetting;
+    [SerializeField] private GameSetting gameSetting;
     [SerializeField] private float playZone;
     [SerializeField] private Hoop[] hoops;
-    [SerializeField] private float timeDecreaseEachScore;
-    [SerializeField] private float minTime;
     [SerializeField] private Animator flashEffect;
     [SerializeField] private Image flashImage;
     private bool hoopInRight;
 
     private int score;
     private float maxTime;
-    private Level currentLevel;
 
     private float timer;
     private bool isPlaying;
     private bool usedSecondChance;
     private int comboCount;
+    private bool isChallenge;
+    private bool hasTimeUpdate;
 
     public float PlayZone => playZone;
     public bool HoopInRight => hoopInRight;
     public int Score => score;
     public float TimeRemainInPercent => timer / maxTime;
-    public Level GetCurrentLevel => currentLevel;
     public int ComboCount => comboCount;
     public bool IsOnBurn => comboCount >= 3;
 
@@ -45,6 +44,8 @@ public class GameManager : MonoBehaviour
     public Action OnResume;
     public Action<Challenge> OnWin;
     public Action OnTimeOut;
+    public Action OnChallengeComplete;
+    public Action OnChallengeFail;
     public Action OnRevive;
     public Action OnEndGame;
 
@@ -54,42 +55,19 @@ public class GameManager : MonoBehaviour
 
         OnGameStart += delegate ()
         {
-            usedSecondChance = false;
             hoopInRight = true;
-
-            currentLevel = levelsSetting.levels[0]; // temp
-
-            maxTime = currentLevel.initTime;
-            timer = maxTime;
-
-            isPlaying = false;
-
             WakeHoopUp();
         };
 
+        OnScore += CalculateScore;
         OnScore += delegate (bool combo)
         {
             isPlaying = true;
 
-            if (combo)
-            {
-                comboCount += 1;
-                score += comboCount >= 3 ? 8 : (comboCount == 2 ? 4 : 2);
+            if (hasTimeUpdate)
+                UpdateTimer();
 
-                if (comboCount == 3)
-                {
-                    flashImage.color = playerSetting.flashColor;
-                }
-                flashEffect.SetTrigger("On Score");
-            }
-            else
-            {
-                score += 1;
-                comboCount = 0;
-                flashImage.color = Color.white;
-            }
             hoopInRight = !hoopInRight;
-            UpdateTimer();
             WakeHoopUp();
         };
 
@@ -105,14 +83,75 @@ public class GameManager : MonoBehaviour
         OnRevive += delegate ()
         {
             usedSecondChance = true;
-            maxTime = (maxTime + currentLevel.initTime) / 2;
+            maxTime = (maxTime + gameSetting.initTime) / 2;
             timer = maxTime;
             isPlaying = true;
         };
 
+        if (playerSetting.observer != null)
+        {
+            isChallenge = true;
+
+            if (playerSetting.observer.hasTimeLimit)
+            {
+                hasTimeUpdate = false;
+                InitTimer(playerSetting.observer.timeLimit);
+            }
+            else
+            {
+                hasTimeUpdate = true;
+                InitTimer(0);
+            }
+
+            playerSetting.observer.Init();
+
+            OnChallengeComplete += delegate ()
+            {
+                isPlaying = false;
+                // TODO: Show UI
+                Logger.Log("Success");
+            };
+
+            OnChallengeFail += delegate ()
+            {
+                isPlaying = false;
+                // 
+                Logger.Log("Fail");
+            };
+        }
+        else
+        {
+            isChallenge = false;
+            hasTimeUpdate = true;
+            InitTimer(0);
+        }
+
+        isPlaying = false;
+        usedSecondChance = false;
+
         Tracker.Instance.Attach();
         Ball.Instance.SetSkin(playerSetting.mainSkin, playerSetting.burnSkin, playerSetting.burnEffect);
         StartCoroutine(Start(0.25f));
+    }
+
+    public string GetChallengeText()
+    {
+        if (playerSetting.observer != null)
+        {
+            return playerSetting.observer.description;
+        }
+
+        return "Endless";
+    }
+
+    public void ChallengeComplete()
+    {
+
+    }
+
+    public void ChallengeFail()
+    {
+
     }
 
     private IEnumerator Start(float delay)
@@ -121,11 +160,38 @@ public class GameManager : MonoBehaviour
         OnGameStart();
     }
 
+    private void InitTimer(float time)
+    {
+        maxTime = time > 0 ? time : gameSetting.initTime;
+        timer = maxTime;
+    }
+
+    private void CalculateScore(bool combo)
+    {
+        if (combo)
+        {
+            comboCount += 1;
+            score += comboCount >= 3 ? 8 : (comboCount == 2 ? 4 : 2);
+
+            if (comboCount == 3)
+            {
+                flashImage.color = playerSetting.flashColor;
+            }
+            flashEffect.SetTrigger("On Score");
+        }
+        else
+        {
+            score += 1;
+            comboCount = 0;
+            flashImage.color = Color.white;
+        }
+    }
+
     private void UpdateTimer()
     {
-        maxTime -= timeDecreaseEachScore;
-        if (maxTime < minTime)
-            maxTime = minTime;
+        maxTime -= gameSetting.timeReducePerScore;
+        if (maxTime < gameSetting.minTime)
+            maxTime = gameSetting.minTime;
 
         timer = maxTime;
     }
@@ -150,6 +216,12 @@ public class GameManager : MonoBehaviour
 
     public void OfficialTimeOut()
     {
+        if (isChallenge)
+        {
+            OnChallengeFail();
+            return;
+        }
+
         comboCount = 0;
 
         if (usedSecondChance)

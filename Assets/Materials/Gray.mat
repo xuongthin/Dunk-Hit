@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Grayable
+  m_Name: Gray
   m_Shader: {fileID: 4800000, guid: 8f9a6cb5ed6c075439a4335ea1690ad6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

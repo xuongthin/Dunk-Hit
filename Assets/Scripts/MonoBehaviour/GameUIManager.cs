@@ -25,6 +25,10 @@ public class GameUIManager : MonoBehaviour
 
     [Header("Pause")]
     [SerializeField] private GameObject pauseGroup;
+    [Header("Challenge Complete")]
+    [SerializeField] private Animator challengeCompleteAnimator;
+    [Header("Challenge Fail")]
+    [SerializeField] private Animator challengeFailAnimator;
     [Header("End Game")]
     [SerializeField] private GameObject endgameGroup;
     [SerializeField] private Text endGameScore;
@@ -32,6 +36,8 @@ public class GameUIManager : MonoBehaviour
 
     private bool isPlaying;
     private int previousScore;
+
+    private const string ACTIVE = "Active";
 
     private void Start()
     {
@@ -62,14 +68,17 @@ public class GameUIManager : MonoBehaviour
 
         GameManager.Instance.OnEndGame += ShowEndgameGroup;
 
-        previousScore = 0;
-    }
+        GameManager.Instance.OnChallengeComplete += delegate ()
+        {
+            challengeCompleteAnimator.Play(ACTIVE);
+        };
 
-    public void OnGameStart()
-    {
-        isPlaying = true;
-        challenge.text = GameManager.Instance.GetCurrentLevel.description;
-        StartCoroutine(Fade(challengeCanvas, 2, 1.5f));
+        GameManager.Instance.OnChallengeFail += delegate ()
+        {
+            challengeFailAnimator.Play(ACTIVE);
+        };
+
+        previousScore = 0;
     }
 
     public void UpdateScore(bool combo)
@@ -112,6 +121,22 @@ public class GameUIManager : MonoBehaviour
         GameManager.Instance.OnRevive();
     }
 
+    public void Replay()
+    {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void Update()
+    {
+        if (isPlaying)
+        {
+            float timerBarFill = GameManager.Instance.TimeRemainInPercent;
+            timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
+
+            timerAnimator.SetBool("Warning", timerBarFill <= rushTimeThreshold);
+        }
+    }
+
     private void ShowEndgameGroup()
     {
         isPlaying = false;
@@ -127,20 +152,11 @@ public class GameUIManager : MonoBehaviour
         bestScore.text = theBestScore.ToString();
     }
 
-    public void Replay()
+    private void OnGameStart()
     {
-        SceneManager.LoadScene("Game");
-    }
-
-    public void Update()
-    {
-        if (isPlaying)
-        {
-            float timerBarFill = GameManager.Instance.TimeRemainInPercent;
-            timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
-
-            timerAnimator.SetBool("Warning", timerBarFill <= rushTimeThreshold);
-        }
+        isPlaying = true;
+        challenge.text = GameManager.Instance.GetChallengeText();
+        StartCoroutine(Fade(challengeCanvas, 2, 1.5f));
     }
 
     private IEnumerator Fade(CanvasGroup canvas, float delay, float time)

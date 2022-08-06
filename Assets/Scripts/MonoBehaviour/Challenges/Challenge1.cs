@@ -1,20 +1,24 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Challenge1 : Challenge
+[CreateAssetMenu(fileName = "Challenge 1", menuName = "Challenge/Challenge 1", order = 1)]
+public class Challenge1 : Observer
 {
-    [SerializeField] private int targetScore;
+    [SerializeField] private int target;
 
-    private int counter;
-
-    protected override void Init()
+    public override void Init()
     {
-        counter = 0;
+        GameManager.Instance.OnScore += Check;
+    }
 
-        GameManager.Instance.OnScore += delegate (bool value)
+    private void Check(bool combo)
+    {
+        int score = GameManager.Instance.Score;
+        if (score >= target)
         {
-
-        };
+            GameManager.Instance.OnChallengeComplete();
+            OnComplete();
+        }
     }
 }

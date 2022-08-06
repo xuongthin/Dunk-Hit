@@ -22,6 +22,8 @@ public class Tracker : MonoBehaviour
     [SerializeField] private SkinsData skinsData;
     private int[] trackValues;
     private string[] trackKeys;
+    private int challengeTrack;
+    private const string CHALLENGE_TRACK = "ChallengeTrack";
     private int currentScore;
     private int currentScoreBasket;
     private int currentPerfectChain;
@@ -78,6 +80,17 @@ public class Tracker : MonoBehaviour
             return -1;
     }
 
+    public int GetChallengeData()
+    {
+        return challengeTrack;
+    }
+
+    public void SaveChallengeComplete(int id)
+    {
+        challengeTrack = challengeTrack | (1 << id);
+        PlayerPrefs.SetInt(CHALLENGE_TRACK, challengeTrack);
+    }
+
     private void InitNLoad()
     {
         int trackedDataTypeCount = Enum.GetNames(typeof(TrackedDataType)).Length;
@@ -88,15 +101,21 @@ public class Tracker : MonoBehaviour
             trackKeys[i] = "TrackData" + i.ToString();
             InitPref(out trackValues[i], trackKeys[i]);
         }
+
+        InitPref(out challengeTrack, CHALLENGE_TRACK);
     }
 
     private void CheckSkinsData(bool onLoad = false)
     {
         foreach (Skin skin in skinsData.skins)
         {
-            if (!skin.unlocked)
+            if (onLoad)
             {
-                if (CheckCondition(skin) && !onLoad)
+                skin.unlocked = CheckCondition(skin);
+            }
+            else if (!skin.unlocked)
+            {
+                if (CheckCondition(skin))
                 {
                     Unlock(skin);
                     Save();
