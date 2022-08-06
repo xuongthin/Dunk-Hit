@@ -22,11 +22,16 @@ public class Tracker : MonoBehaviour
     [SerializeField] private SkinsData skinsData;
     private int[] trackValues;
     private string[] trackKeys;
+    private const string TRACK_DATA = "TrackData";
     private int challengeTrack;
     private const string CHALLENGE_TRACK = "ChallengeTrack";
+    private int skinLookTrack;
+    private const string SKIN_LOOK_TRACK = "SkinLookTrack";
     private int currentScore;
     private int currentScoreBasket;
     private int currentPerfectChain;
+
+    public Action<Skin> OnUnlock;
 
     private void Start()
     {
@@ -91,6 +96,22 @@ public class Tracker : MonoBehaviour
         PlayerPrefs.SetInt(CHALLENGE_TRACK, challengeTrack);
     }
 
+    public bool CheckUnseenSkin()
+    {
+        foreach (Skin skin in skinsData.skins)
+        {
+            if (skin.unlocked && !skin.looked)
+                return true;
+        }
+        return false;
+    }
+
+    public void SaveSkinLook(int id)
+    {
+        skinLookTrack = skinLookTrack | (1 << id);
+        PlayerPrefs.SetInt(SKIN_LOOK_TRACK, skinLookTrack);
+    }
+
     private void InitNLoad()
     {
         int trackedDataTypeCount = Enum.GetNames(typeof(TrackedDataType)).Length;
@@ -98,26 +119,30 @@ public class Tracker : MonoBehaviour
         trackKeys = new string[trackedDataTypeCount];
         for (int i = 0; i < trackedDataTypeCount; i++)
         {
-            trackKeys[i] = "TrackData" + i.ToString();
-            InitPref(out trackValues[i], trackKeys[i]);
+            trackKeys[i] = TRACK_DATA + i.ToString();
+            InitPref(out trackValues[i], trackKeys[i], 0);
         }
 
-        InitPref(out challengeTrack, CHALLENGE_TRACK);
+        InitPref(out challengeTrack, CHALLENGE_TRACK, 0);
+        InitPref(out skinLookTrack, SKIN_LOOK_TRACK, 1);
     }
 
     private void CheckSkinsData(bool onLoad = false)
     {
+        int i = 0;
         foreach (Skin skin in skinsData.skins)
         {
             if (onLoad)
             {
                 skin.unlocked = CheckCondition(skin);
+                skin.looked = (skinLookTrack & (1 << i)) != 0;
+                i++;
             }
             else if (!skin.unlocked)
             {
                 if (CheckCondition(skin))
                 {
-                    Unlock(skin);
+                    OnUnlock(skin);
                     Save();
                 }
             }
@@ -133,18 +158,12 @@ public class Tracker : MonoBehaviour
         }
     }
 
-    private void Unlock(Skin skin)
-    {
-        // TODO: Invoke UI Manager function
-        // TODO: make sure UI Manager can handler multi commands
-    }
-
-    private void InitPref(out int value, string key)
+    private void InitPref(out int value, string key, int initValue)
     {
         value = PlayerPrefs.GetInt(key, -1);
         if (value < 0)
         {
-            value = 0;
+            value = initValue;
             PlayerPrefs.SetInt(key, value);
         }
     }

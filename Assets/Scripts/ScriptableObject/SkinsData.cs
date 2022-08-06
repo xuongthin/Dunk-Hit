@@ -14,7 +14,8 @@ public class Skin
     public Sprite onFireTexture;
     public GameObject burnEffect;
     public Color flashColor;
-    public bool unlocked;
+    [HideInInspector] public bool unlocked;
+    [HideInInspector] public bool looked;
     public string challenge;
     public TrackedDataType conditionType;
     public int condition;

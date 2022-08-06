@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
             return playerSetting.observer.description;
         }
 
-        return "Endless";
+        return "";
     }
 
     public void ChallengeComplete()
@@ -178,6 +178,9 @@ public class GameManager : MonoBehaviour
                 flashImage.color = playerSetting.flashColor;
             }
             flashEffect.SetTrigger("On Score");
+
+            if (comboCount >= 3)
+                AudioManager.Instance.Vibrate();
         }
         else
         {

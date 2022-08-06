@@ -69,6 +69,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlayJumpAudio()
     {
+        if (jumpAudio.isPlaying)
+            jumpAudio.Stop();
         jumpAudio.Play();
     }
 

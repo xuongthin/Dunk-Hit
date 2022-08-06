@@ -23,10 +23,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private SettingGroup settingGroup;
     [SerializeField] private Toggle soundToggle;
     [SerializeField] private Toggle vibrationToggle;
-    [Header("Challenge group")]
-    [SerializeField] private GameObject challengeGroup;
     [Header("Skin group")]
-    [SerializeField] private GameObject skinGroup;
+    [SerializeField] private Image unseenSkinNotification;
     [SerializeField] private Transform mark;
 
     public List<Skin> SkinList => skinsData.skins;
@@ -34,32 +32,44 @@ public class MenuManager : MonoBehaviour
     private int skinId;
     public int SkinId => skinId;
 
+    private const string VOLUME = "Volume";
+    private const string VIBRATION = "Vibration";
+    private const string SKIN = "Skin";
+    private const string OPEN_GAME = "Open Game";
+    private const string OPEN_SCENE = "Open Scene";
+    private const string GAME = "Game";
+
     private void Start()
     {
         Application.targetFrameRate = 60;
 
         LoadPlayerSave();
         UpdatePlayButtonSkin();
-
+        UpdateNotification();
         PlayIntro();
     }
 
     public void SetSound(bool value)
     {
         AudioManager.Instance.SetVolume(value);
-        PlayerPrefs.SetInt("Volume", value ? 1 : 0);
+        PlayerPrefs.SetInt(VOLUME, value ? 1 : 0);
     }
 
     public void SetVibration(bool value)
     {
         AudioManager.Instance.isVibrationOn = value;
-        PlayerPrefs.SetInt("Vibration", value ? 1 : 0);
+        PlayerPrefs.SetInt(VIBRATION, value ? 1 : 0);
+    }
+
+    public void UpdateNotification()
+    {
+        unseenSkinNotification.enabled = Tracker.Instance.CheckUnseenSkin();
     }
 
     public void SetSkin(int id)
     {
         skinId = id;
-        PlayerPrefs.SetInt("Skin", id);
+        PlayerPrefs.SetInt(SKIN, id);
         Skin skin = skinsData.skins[id];
         playerSetting.mainSkin = skin.mainTexture;
         playerSetting.burnSkin = skin.onFireTexture;
@@ -78,28 +88,30 @@ public class MenuManager : MonoBehaviour
     {
         playerSetting.observer = observer;
         AudioManager.Instance.PlayGameAudio();
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(GAME);
     }
 
     private void PlayIntro()
     {
-        string animationName = AudioManager.Instance.CheckFirstTime() ? "Open Game" : "Open Scene";
+        string animationName = AudioManager.Instance.CheckFirstTime() ? OPEN_GAME : OPEN_SCENE;
         homeAnimator.Play(animationName);
     }
 
     private void LoadPlayerSave()
     {
-        int bestScore = PlayerPrefs.GetInt("HighScore", 0);
+        int bestScore = Tracker.Instance.GetData(((int)TrackedDataType.BestScore));
         this.bestScore.text = bestScore.ToString();
 
-        skinId = PlayerPrefs.GetInt("Skin", 0);
+        skinId = PlayerPrefs.GetInt(SKIN, 0);
         SetSkin(skinId);
 
-        int volumeSetting = PlayerPrefs.GetInt("Volume", 1);
+        int volumeSetting = Helper.GetPlayerPref(VOLUME, 1);
         AudioManager.Instance.SetVolume(volumeSetting > 0);
+        soundToggle.isOn = volumeSetting > 0;
 
-        int vibrateSetting = PlayerPrefs.GetInt("Vibration", 1);
+        int vibrateSetting = Helper.GetPlayerPref(VIBRATION, 1);
         AudioManager.Instance.isVibrationOn = vibrateSetting > 0;
+        vibrationToggle.isOn = vibrateSetting > 0;
     }
 
     private void UpdatePlayButtonSkin()

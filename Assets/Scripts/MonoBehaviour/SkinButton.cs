@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class SkinButton : MonoBehaviour
 {
     [SerializeField] private SkinButtonSetting setting;
+    [SerializeField] private Image unseenMark;
     public Action<int> OnLockedClick;
     private Image image;
     private Button button;
@@ -34,13 +35,14 @@ public class SkinButton : MonoBehaviour
         {
             image.sprite = data.mainTexture;
             image.color = data.unlocked ? Color.white : setting.onLockedColor;
+            unseenMark.enabled = data.unlocked && !data.looked;
         }
         else
         {
             button.interactable = false;
         }
 
-        if (MenuManager.Instance.SkinId == transform.GetSiblingIndex())
+        if (MenuManager.Instance.SkinId == id)
         {
             MarkSelf();
         }
@@ -51,8 +53,14 @@ public class SkinButton : MonoBehaviour
         AudioManager.Instance.PlayTapSound();
         if (data.unlocked)
         {
-            MenuManager.Instance.SetSkin(transform.GetSiblingIndex());
+            MenuManager.Instance.SetSkin(id);
             MarkSelf();
+            if (!data.looked)
+            {
+                data.looked = true;
+                unseenMark.enabled = false;
+                Tracker.Instance.SaveSkinLook(id);
+            }
         }
         else
         {

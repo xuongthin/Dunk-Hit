@@ -14,6 +14,12 @@ public class Hoop : MonoBehaviour
 
     private bool isScored = true;
 
+    private const string GET_IN = "Get In";
+    private const string GET_OUT = "Get Out";
+    private const string BURN = "Burn";
+    private const string SCORE = "Score";
+    private const string PERFECT = "Perfect";
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -27,7 +33,7 @@ public class Hoop : MonoBehaviour
         Vector3 position = transform.position;
         position.y = newPositionY;
         transform.position = position;
-        animator.Play("Get In", 0);
+        animator.Play(GET_IN, 0);
     }
 
     public void ReadyToScore()
@@ -39,19 +45,19 @@ public class Hoop : MonoBehaviour
     {
         if (!isScored && other.transform.position.y < trigger.position.y)
         {
-            Ball.Instance.CheckCombo();
-
             if (GameManager.Instance.IsOnBurn)
             {
-                animator.Play("Burn", 1);
+                animator.Play(BURN, 1);
             }
             else
             {
-                animator.Play("Score", 1);
+                animator.Play(SCORE, 1);
             }
 
+            Ball.Instance.CheckCombo();
+
             isScored = true;
-            animator.Play("Get Out", 0);
+            animator.Play(GET_OUT, 0);
         }
     }
 
@@ -82,7 +88,7 @@ public class Hoop : MonoBehaviour
     {
         if (combo && !isScored)
         {
-            animator.Play("Perfect", 2);
+            animator.Play(PERFECT, 2);
             addScoreEffect.Trigger(displayBigScorePosition.position);
         }
     }

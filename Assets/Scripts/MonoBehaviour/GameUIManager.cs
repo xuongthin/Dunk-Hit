@@ -38,6 +38,10 @@ public class GameUIManager : MonoBehaviour
     private int previousScore;
 
     private const string ACTIVE = "Active";
+    private const string SCORE = "Score";
+    private const string MAIN_MENU = "MainMenu";
+    private const string GAME = "Game";
+    private const string WARNING = "Warning";
 
     private void Start()
     {
@@ -78,6 +82,7 @@ public class GameUIManager : MonoBehaviour
             challengeFailAnimator.Play(ACTIVE);
         };
 
+        challenge.text = GameManager.Instance.GetChallengeText();
         previousScore = 0;
     }
 
@@ -97,13 +102,13 @@ public class GameUIManager : MonoBehaviour
         {
             perfectGroup.SetActive(false);
         }
-        scoreAnimator.Play("Score");
+        scoreAnimator.Play(SCORE);
     }
 
     public void BackHome()
     {
         AudioManager.Instance.PlayMenuAudio();
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(MAIN_MENU);
     }
 
     public void PauseGame()
@@ -123,7 +128,7 @@ public class GameUIManager : MonoBehaviour
 
     public void Replay()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(GAME);
     }
 
     public void Update()
@@ -133,7 +138,7 @@ public class GameUIManager : MonoBehaviour
             float timerBarFill = GameManager.Instance.TimeRemainInPercent;
             timerBar.fillAmount = Mathf.Clamp(timerBarFill, 0.0f, 1.0f);
 
-            timerAnimator.SetBool("Warning", timerBarFill <= rushTimeThreshold);
+            timerAnimator.SetBool(WARNING, timerBarFill <= rushTimeThreshold);
         }
     }
 
@@ -155,7 +160,6 @@ public class GameUIManager : MonoBehaviour
     private void OnGameStart()
     {
         isPlaying = true;
-        challenge.text = GameManager.Instance.GetChallengeText();
         StartCoroutine(Fade(challengeCanvas, 2, 1.5f));
     }
 

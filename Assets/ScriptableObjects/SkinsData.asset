@@ -19,6 +19,7 @@ MonoBehaviour:
       type: 3}
     flashColor: {r: 1, g: 0.5116537, b: 0.2216981, a: 1}
     unlocked: 1
+    looked: 1
     challenge: Default skin
     conditionType: 0
     condition: 0
@@ -27,7 +28,8 @@ MonoBehaviour:
     burnEffect: {fileID: 5597372421339032197, guid: 9649c92efa1c74f46abe0c3f2de8fdf8,
       type: 3}
     flashColor: {r: 0.20536669, g: 0.6698113, b: 0.26452273, a: 1}
-    unlocked: 1
+    unlocked: 0
+    looked: 0
     challenge: Get total 100 score
     conditionType: 1
     condition: 100
@@ -36,7 +38,8 @@ MonoBehaviour:
     burnEffect: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
       type: 3}
     flashColor: {r: 0.1273585, g: 1, b: 0.9681174, a: 1}
-    unlocked: 1
+    unlocked: 0
+    looked: 0
     challenge: Jump total 100 times
     conditionType: 0
     condition: 100
@@ -46,15 +49,17 @@ MonoBehaviour:
       type: 3}
     flashColor: {r: 0.41509432, g: 0, b: 0, a: 1}
     unlocked: 0
+    looked: 0
     challenge: Get total 30 perfect score
     conditionType: 4
     condition: 30
-  - mainTexture: {fileID: 21300000, guid: 811664b98700ab34299e5e84ea7dc434, type: 3}
-    onFireTexture: {fileID: 21300000, guid: 811664b98700ab34299e5e84ea7dc434, type: 3}
+  - mainTexture: {fileID: 21300000, guid: a8b405dd62fd49f4e8533da93a26d3ec, type: 3}
+    onFireTexture: {fileID: 21300000, guid: a8b405dd62fd49f4e8533da93a26d3ec, type: 3}
     burnEffect: {fileID: 5597372421339032197, guid: 9a4372e8b0736714b93b9938d206cb24,
       type: 3}
     flashColor: {r: 0.9862842, g: 1, b: 0.2028302, a: 0}
     unlocked: 1
+    looked: 1
     challenge: Chain 5 perfects
     conditionType: 5
     condition: 5

@@ -94,6 +94,17 @@ public static class Helper
                    color.a.ToString();
         return o;
     }
+
+    public static int GetPlayerPref(string key, int initValue)
+    {
+        int value = PlayerPrefs.GetInt(key, -1);
+        if (value < 0)
+        {
+            value = initValue;
+            PlayerPrefs.SetInt(key, value);
+        }
+        return value;
+    }
 }
 
 [Serializable]
